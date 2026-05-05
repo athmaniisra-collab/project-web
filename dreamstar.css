@@ -497,8 +497,9 @@ transform: translateY(-2px);
   background: #d5912b;
 }
 @media(max-width:768px){
-  container {
+ .container {
 flex-direction: column;
+  width:95px;
   }
   .sidebar{
     width: 100%;
