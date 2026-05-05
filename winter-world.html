@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Winter Weekly Planner</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --night: #0d1b2a;
+            --deep: #112240;
+            --mid: #1a3357;
+            --frost: #a8d8ea;
+            --ice: #d6eaf8;
+            --snow: #f0f7ff;
+            --gold: #e8c97a;
+            --rose: #e8a0b0;
+            --sage: #7bc4a0;
+            --muted: #6a8cad;
+            --text: #d6eaf8;
+            --text-dim: #7a9fc0;
+            --border: rgba(168, 216, 234, 0.15);
+            --radius: 14px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--mid);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated snow background */
+        .snow-bg {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .flake {
+            position: absolute;
+            top: -20px;
+            color: rgba(168, 216, 234, 0.4);
+            font-size: 12px;
+            animation: fall linear infinite;
+            user-select: none;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(360deg);
+            }
+        }
+
+        /* Stars */
+        .stars {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+
+            0%,
+            100% {
+                opacity: 0.2;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .app {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px 20px;
+        }
+
+        /* HEADER */
+        header {
+            text-align: center;
+            margin-bottom: 32px;
+            position: relative;
+        }
+
+        .header-snowflakes {
+            font-size: 22px;
+            color: #081fd1;
+            opacity: 0.6;
+            letter-spacing: 20px;
+            margin-bottom: 8px;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0)
+            }
+
+            50% {
+                transform: translateY(-5px)
+            }
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(28px, 5vw, 48px);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--frost), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .header-sub {
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 4px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* COUNTDOWN BANNER */
+        .countdown-banner {
+            background: linear-gradient(135deg, rgba(26, 51, 87, 0.9), rgba(17, 34, 64, 0.9));
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px 24px;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            backdrop-filter: blur(10px);
+            flex-wrap: wrap;
+        }
+
+        .countdown-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .countdown-icon {
+            font-size: 28px;
+        }
+
+        .countdown-text h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            color: var(--rose);
+        }
+
+        .countdown-text p {
+            font-size: 12px;
+            color: var(--ice);
+            margin-top: 2px;
+        }
+
+        .countdown-timer {
+            display: flex;
+            gap: 12px;
+        }
+
+        .timer-block {
+            text-align: center;
+            background: rgba(168, 216, 234, 0.08);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 8px 14px;
+        }
+
+        .timer-num {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            color: var(--rose);
+            font-weight: 700;
+        }
+
+        .timer-label {
+            font-size: 10px;
+            color: var(--rose);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .active-badge {
+            background: linear-gradient(135deg, var(--rose), #5f1a67);
+            color: #40364f;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 6px 16px;
+            border-radius: 20px;
+            display: none;
+        }
+
+        /* WEEK TABS */
+        .week-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .week-tab {
+            flex: 1;
+            min-width: 120px;
+            background: rgba(26, 51, 87, 0.5);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .week-tab:hover {
+            border-color: rgba(168, 216, 234, 0.35);
+            background: rgba(26, 51, 87, 0.8);
+        }
+
+        .week-tab.active {
+            background: linear-gradient(135deg, rgba(26, 51, 87, 0.95), rgba(17, 34, 64, 0.95));
+            border-color: var(--frost);
+            box-shadow: 0 0 20px rgba(168, 216, 234, 0.15);
+        }
+
+        .week-tab.locked {
+            cursor: not-allowed;
+            opacity: 0.45;
+        }
+
+        .week-tab.locked:hover {
+            border-color: var(--border);
+            background: rgba(26, 51, 87, 0.5);
+        }
+
+        .tab-label {
+            font-size: 11px;
+            color: var(--rose);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tab-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 15px;
+            color: var(--frost);
+            margin-top: 2px;
+        }
+
+        .tab-dates {
+            font-size: 10px;
+            color: var(--text-dim);
+            margin-top: 1px;
+        }
+
+        .lock-icon-tab {
+            font-size: 14px;
+            position: absolute;
+            top: 8px;
+            right: 10px;
+        }
+
+        /* MAIN LAYOUT */
+        .planner-layout {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 16px;
+            align-items: start;
+        }
+
+        @media (max-width: 768px) {
+            .planner-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .card {
+            background: #40364f;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            backdrop-filter: blur(8px);
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 13px;
+            color: #998daa;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card-title span {
+            font-size: 14px;
+        }
+
+        /* Mini Calendar */
+        .mini-cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            text-align: center;
+        }
+
+        .cal-day-head {
+            font-size: 9px;
+            color: var(--muted);
+            padding: 3px 0;
+            font-weight: 500;
+        }
+
+        .cal-day {
+            font-size: 10px;
+            padding: 4px 2px;
+            border-radius: 4px;
+            cursor: default;
+            color: var(--text-dim);
+            transition: background 0.15s;
+        }
+
+        .cal-day.in-week {
+            color: var(--text);
+        }
+
+        .cal-day.today {
+            background: var(--gold);
+            color: var(--rose);
+            font-weight: 700;
+            border-radius: 50%;
+        }
+
+        .cal-day.selected-week {
+            background: rgba(168, 216, 234, 0.12);
+            color: var(--frost);
+        }
+
+        /* Task lists */
+        .section-label {
+            font-size: 10px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+            margin-top: 4px;
+        }
+
+        .task-input-row {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 6px;
+            align-items: center;
+        }
+
+        .task-cb {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+            border: 1px solid var(--muted);
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+        }
+
+        .task-cb.checked {
+            background: var(--sage);
+            border-color: var(--sage);
+        }
+
+        .task-cb.checked::after {
+            content: '✓';
+            font-size: 9px;
+            color: var(--night);
+            font-weight: 700;
+        }
+
+        .task-input {
+            flex: 1;
+            background: rgba(168, 216, 234, 0.06);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 5px 8px;
+            font-size: 11px;
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            outline: none;
+            transition: border 0.15s;
+        }
+
+        .task-input:focus {
+            border-color: rgba(168, 216, 234, 0.4);
+        }
+
+        .task-input::placeholder {
+            color: var(--text-dim);
+        }
+
+        .add-task-btn {
+            width: 100%;
+            padding: 6px;
+            border-radius: 6px;
+            background: rgba(168, 216, 234, 0.08);
+            border: 1px dashed rgba(168, 216, 234, 0.2);
+            color: var(--muted);
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .add-task-btn:hover {
+            background: rgba(168, 216, 234, 0.14);
+            color: var(--frost);
+        }
+
+        /* Notes */
+        .notes-area {
+            width: 100%;
+            background: rgba(168, 216, 234, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px;
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 11px;
+            resize: vertical;
+            min-height: 80px;
+            outline: none;
+            line-height: 1.6;
+        }
+
+        .notes-area:focus {
+            border-color: rgba(168, 216, 234, 0.35);
+        }
+
+        .notes-area::placeholder {
+            color: var(--text-dim);
+        }
+
+        /* SCHEDULE */
+        .schedule-area {
+            overflow-x: auto;
+        }
+
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(17, 34, 64, 0.85);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            backdrop-filter: blur(8px);
+            min-width: 600px;
+        }
+
+        .schedule-table th {
+            background: rgba(26, 51, 87, 0.95);
+            padding: 10px 6px;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--frost);
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+
+        .schedule-table th.time-head {
+            color: var(--muted);
+            font-size: 10px;
+            width: 68px;
+        }
+
+        .schedule-table th.today-col {
+            color: var(--gold);
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .time-cell {
+            font-size: 9px;
+            color: var(--muted);
+            padding: 0 6px;
+            text-align: right;
+            white-space: nowrap;
+            background: rgba(26, 51, 87, 0.4);
+            border-right: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        .time-cell.half {
+            color: rgba(106, 140, 173, 0.5);
+            font-size: 8px;
+        }
+
+        .sched-cell {
+            border: 0.5px solid var(--border);
+            padding: 2px 4px;
+            height: 26px;
+            vertical-align: middle;
+            cursor: pointer;
+            transition: background 0.15s;
+            position: relative;
+        }
+
+        .sched-cell:hover {
+            background: rgba(168, 216, 234, 0.08);
+        }
+
+        .sched-cell.half-hour {
+            height: 20px;
+        }
+
+        .cell-content {
+            font-size: 9px;
+            font-weight: 500;
+            padding: 2px 5px;
+            border-radius: 3px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            display: inline-block;
+        }
+
+        /* Category colors */
+        .cat-wellness {
+            background: rgba(123, 196, 160, 0.25);
+            color: #7bc4a0;
+        }
+
+        .cat-work {
+            background: rgba(168, 216, 234, 0.25);
+            color: var(--frost);
+        }
+
+        .cat-side {
+            background: rgba(232, 201, 122, 0.25);
+            color: var(--gold);
+        }
+
+        .cat-personal {
+            background: rgba(232, 160, 176, 0.25);
+            color: var(--rose);
+        }
+
+        .cat-meal {
+            background: rgba(180, 220, 140, 0.25);
+            color: #a0d860;
+        }
+
+        .cat-study {
+            background: rgba(200, 170, 255, 0.25);
+            color: #c8aaff;
+        }
+
+        .cat-exercise {
+            background: rgba(255, 180, 100, 0.25);
+            color: #40364f;
+        }
+
+        .cat-social {
+            background: rgba(255, 140, 160, 0.25);
+            color: #ea5b73;
+        }
+
+        .cat-rest {
+            background: rgba(140, 180, 255, 0.25);
+            color: #8cb4ff;
+        }
+
+        .cat-other {
+            background: rgba(168, 216, 234, 0.12);
+            color: var(--muted);
+        }
+
+        /* CONTEXT MENU */
+        .context-menu {
+            position: fixed;
+            z-index: 9999;
+            background: rgba(17, 34, 64, 0.98);
+            border: 1px solid rgba(168, 216, 234, 0.3);
+            border-radius: 14px;
+            padding: 8px;
+            min-width: 220px;
+            box-shadow: 0 20px 60px rgba(0, 0, 10, 0.6);
+            backdrop-filter: blur(20px);
+            display: none;
+            animation: menuIn 0.15s ease;
+        }
+
+        @keyframes menuIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(-4px)
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0)
+            }
+        }
+
+        .ctx-section-label {
+            font-size: 9px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 4px 10px 6px;
+        }
+
+        .ctx-cat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+            padding: 0 4px 8px;
+        }
+
+        .ctx-cat-btn {
+            padding: 7px 8px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 500;
+            font-family: 'DM Sans', sans-serif;
+            transition: all 0.15s;
+            text-align: center;
+        }
+
+        .ctx-cat-btn:hover {
+            filter: brightness(1.3);
+            transform: scale(1.03);
+        }
+
+        .ctx-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 4px 8px;
+        }
+
+        .ctx-text-row {
+            padding: 4px 8px;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .ctx-text-input {
+            flex: 1;
+            background: rgba(168, 216, 234, 0.08);
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            padding: 6px 8px;
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 11px;
+            outline: none;
+        }
+
+        .ctx-text-input:focus {
+            border-color: rgba(168, 216, 234, 0.4);
+        }
+
+        .ctx-apply-btn {
+            padding: 6px 12px;
+            background: var(--frost);
+            color: var(--night);
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 500;
+            font-family: 'DM Sans', sans-serif;
+            white-space: nowrap;
+        }
+
+        .ctx-clear-btn {
+            width: 100%;
+            margin: 4px 0 0;
+            padding: 7px;
+            border-radius: 8px;
+            background: rgba(232, 160, 176, 0.12);
+            border: 1px solid rgba(232, 160, 176, 0.2);
+            color: var(--rose);
+            font-size: 11px;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            transition: all 0.15s;
+        }
+
+        .ctx-clear-btn:hover {
+            background: rgba(232, 160, 176, 0.22);
+        }
+
+        /* HABIT TRACKER */
+        .habit-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .habit-name-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 11px;
+            padding: 3px 0;
+            outline: none;
+        }
+
+        .habit-name-input::placeholder {
+            color: var(--text-dim);
+        }
+
+        .habit-dots {
+            display: flex;
+            gap: 3px;
+        }
+
+        .habit-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 1px solid var(--muted);
+            cursor: pointer;
+            background: transparent;
+            transition: all 0.15s;
+        }
+
+        .habit-dot.done {
+            background: var(--sage);
+            border-color: var(--sage);
+        }
+
+        /* SAVE BUTTON */
+        .bottom-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn-save {
+            flex: 1;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, rgba(168, 216, 234, 0.2), rgba(232, 201, 122, 0.2));
+            border: 1px solid rgba(168, 216, 234, 0.3);
+            border-radius: 10px;
+            color: var(--frost);
+            font-size: 13px;
+            font-weight: 500;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-save:hover {
+            background: linear-gradient(135deg, rgba(168, 216, 234, 0.3), rgba(232, 201, 122, 0.3));
+            transform: translateY(-1px);
+        }
+
+        .btn-next {
+            padding: 12px 28px;
+            background: linear-gradient(135deg, var(--gold), #d4b060);
+            border: none;
+            border-radius: 10px;
+            color: var(--night);
+            font-size: 13px;
+            font-weight: 600;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-next:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(232, 201, 122, 0.3);
+        }
+
+        .btn-next:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-print {
+            padding: 12px 20px;
+            background: rgba(123, 196, 160, 0.15);
+            border: 1px solid rgba(123, 196, 160, 0.3);
+            border-radius: 10px;
+            color: var(--sage);
+            font-size: 13px;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-print:hover {
+            background: rgba(123, 196, 160, 0.25);
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: rgba(17, 34, 64, 0.95);
+            border: 1px solid rgba(168, 216, 234, 0.3);
+            border-radius: 10px;
+            padding: 12px 20px;
+            font-size: 13px;
+            color: var(--frost);
+            transition: transform 0.3s ease;
+            z-index: 99999;
+            white-space: nowrap;
+            backdrop-filter: blur(10px);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* WAITING STATE overlay */
+        .waiting-overlay {
+            display: none;
+            position: absolute;
+            inset: 0;
+            z-index: 10;
+            background: rgba(13, 27, 42, 0.7);
+            border-radius: var(--radius);
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 8px;
+            backdrop-filter: blur(4px);
+        }
+
+        .waiting-overlay.show {
+            display: flex;
+        }
+
+        .waiting-overlay p {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .waiting-flake {
+            font-size: 32px;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        .schedule-wrapper {
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Background effects -->
+    <div class="snow-bg" id="snowBg"></div>
+    <div class="stars" id="starsBg"></div>
+
+    <div class="app">
+
+        <!-- Header -->
+        <header>
+            <div class="header-snowflakes">❄ ❅ ❆ ❅ ❄</div>
+            <h1>Winter Weekly Planner</h1>
+            <p class="header-sub">December · January · February · March</p>
+        </header>
+
+        <!-- Countdown Banner -->
+        <div class="countdown-banner" id="countdownBanner">
+            <div class="countdown-left">
+                <div class="countdown-icon">🌨</div>
+                <div class="countdown-text">
+                    <h2 id="bannerTitle">Winter Season Begins December 1</h2>
+                    <p id="bannerSub">Your planner will unlock when winter arrives</p>
+                </div>
+            </div>
+            <div class="countdown-timer" id="timerBlocks">
+                <div class="timer-block">
+                    <div class="timer-num" id="tDays">--</div>
+                    <div class="timer-label">Days</div>
+                </div>
+                <div class="timer-block">
+                    <div class="timer-num" id="tHours">--</div>
+                    <div class="timer-label">Hours</div>
+                </div>
+                <div class="timer-block">
+                    <div class="timer-num" id="tMins">--</div>
+                    <div class="timer-label">Mins</div>
+                </div>
+            </div>
+            <div class="active-badge" id="activeBadge">❄ Season Active</div>
+        </div>
+
+        <!-- Week Tabs -->
+        <div class="week-tabs" id="weekTabs"></div>
+
+        <!-- Main Planner -->
+        <div class="planner-layout">
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+
+                <!-- Mini Calendar -->
+                <div class="card">
+                    <div class="card-title"><span>📅</span> <span id="calMonthLabel">Month</span></div>
+                    <div class="mini-cal-grid" id="miniCalGrid"></div>
+                </div>
+
+                <!-- Most Important Tasks -->
+                <div class="card">
+                    <div class="card-title"><span>⭐</span> Priority Tasks</div>
+                    <div class="section-label">Must Do</div>
+                    <div id="importantTasks"></div>
+                    <button class="add-task-btn" onclick="addTask('important')">+ Add task</button>
+                    <div class="section-label" style="margin-top:14px;">Secondary</div>
+                    <div id="secondaryTasks"></div>
+                    <button class="add-task-btn" onclick="addTask('secondary')">+ Add task</button>
+                </div>
+
+                <!-- Habit Tracker -->
+                <div class="card">
+                    <div class="card-title"><span>🌿</span> Habit Tracker</div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                        <span style="font-size:9px;color:var(--muted);"></span>
+                        <div style="display:flex;gap:2px;">
+                            <span style="font-size:8px;color:var(--muted);">M T W T F S S</span>
+                        </div>
+                    </div>
+                    <div id="habitList"></div>
+                    <button class="add-task-btn" onclick="addHabit()" style="margin-top:6px;">+ Add habit</button>
+                </div>
+
+                <!-- Notes -->
+                <div class="card">
+                    <div class="card-title"><span>📝</span> Notes</div>
+                    <textarea class="notes-area" id="notesArea"
+                        placeholder="Your weekly notes, thoughts, reflections..."></textarea>
+                </div>
+
+            </div><!-- /sidebar -->
+
+            <!-- Schedule -->
+            <div>
+                <div class="schedule-wrapper" id="scheduleWrapper">
+                    <div class="waiting-overlay" id="waitingOverlay">
+                        <div class="waiting-flake">❄</div>
+                        <p>Planner unlocks in winter season</p>
+                    </div>
+                    <div class="schedule-area">
+                        <table class="schedule-table" id="scheduleTable">
+                            <thead id="scheduleHead"></thead>
+                            <tbody id="scheduleBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="bottom-actions">
+                    <button class="btn-save" onclick="saveWeek()">💾 Save Week</button>
+                    <button class="btn-print" onclick="printWeek()">🖨 Print</button>
+                    <button class="btn-next" id="btnNext" onclick="goNextWeek()">Next Week →</button>
+                </div>
+            </div>
+
+        </div><!-- /planner-layout -->
+    </div><!-- /app -->
+
+    <!-- Context Menu -->
+    <div class="context-menu" id="contextMenu">
+        <div class="ctx-section-label">Choose Category</div>
+        <div class="ctx-cat-grid" id="ctxCatGrid"></div>
+        <div class="ctx-divider"></div>
+        <div class="ctx-section-label">Custom Label</div>
+        <div class="ctx-text-row">
+            <input type="text" class="ctx-text-input" id="ctxCustomText" placeholder="Type your label...">
+            <button class="ctx-apply-btn" onclick="applyCustom()">Apply</button>
+        </div>
+        <div style="padding:4px 8px 4px;">
+            <button class="ctx-clear-btn" onclick="clearCell()">✕ Clear cell</button>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ── CONFIG ──────────────────────────────────────────────────────────────────
+        const WINTER_START_MONTH = 12; // December (1-indexed)
+        const WINTER_END_MONTH = 3;  // March
+
+        const CATEGORIES = [
+            { key: 'wellness', label: 'Wellness', cls: 'cat-wellness', icon: '🧘' },
+            { key: 'work', label: 'Work', cls: 'cat-work', icon: '💼' },
+            { key: 'side', label: 'Side Hustle', cls: 'cat-side', icon: '💡' },
+            { key: 'personal', label: 'Personal', cls: 'cat-personal', icon: '💜' },
+            { key: 'meal', label: 'Meal', cls: 'cat-meal', icon: '🥗' },
+            { key: 'study', label: 'Study', cls: 'cat-study', icon: '📚' },
+            { key: 'exercise', label: 'Exercise', cls: 'cat-exercise', icon: '🏃' },
+            { key: 'social', label: 'Social', cls: 'cat-social', icon: '🎉' },
+            { key: 'rest', label: 'Rest', cls: 'cat-rest', icon: '😴' },
+            { key: 'other', label: 'Other', cls: 'cat-other', icon: '📌' },
+        ];
+
+        const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        const DAY_LABELS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+        const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'];
+
+        // Times: 5:00 AM → 12:00 AM (half-hour slots)
+        const TIMES = [];
+        for (let h = 5; h <= 23; h++) {
+            ['00', '30'].forEach(m => {
+                const ampm = h < 12 ? 'AM' : (h === 12 ? 'PM' : 'PM');
+                const disp = h <= 12 ? h : h - 12;
+                TIMES.push({ label: `${disp}:${m} ${h < 12 ? 'AM' : 'PM'}`, full: h * 60 + parseInt(m), half: m === '30' });
+            });
+        }
+        TIMES.push({ label: '12:00 AM', full: 24 * 60, half: false });
+
+        // ── STATE ────────────────────────────────────────────────────────────────────
+        let currentWeek = 0;
+        let activeCell = null;
+        let isWinter = false;
+
+        // weeks[w] = { cells: {}, importantTasks:[], secondaryTasks:[], habits:[], notes:'' }
+        let weeks = [null, null, null, null];
+
+        function initWeek(w) {
+            if (!weeks[w]) {
+                weeks[w] = {
+                    cells: {},
+                    importantTasks: [],
+                    secondaryTasks: [],
+                    habits: [],
+                    notes: ''
+                };
+            }
+        }
+
+        // ── DATE HELPERS ─────────────────────────────────────────────────────────────
+        function getWinterYear() {
+            const now = new Date();
+            const m = now.getMonth() + 1;
+            const y = now.getFullYear();
+            if (m >= WINTER_START_MONTH) return y;          // Dec 2025 → season Dec2025–Mar2026
+            return y - 1;
+        }
+
+        function getWinterStartDate() {
+            const wy = getWinterYear();
+            return new Date(wy, 11, 1); // Dec 1
+        }
+
+        function getWinterEndDate() {
+            const wy = getWinterYear();
+            return new Date(wy + 1, 2, 31); // Mar 31 next year
+        }
+
+        function checkIsWinter() {
+            const now = new Date();
+            const m = now.getMonth() + 1;
+            return (m === 12 || m <= 3);
+        }
+
+        // Week 0 = Dec 1-7, Week 1 = Jan 1st week, etc. (4 weeks across 4 months)
+        function getWeekDateRange(w) {
+            const wy = getWinterYear();
+            const starts = [
+                new Date(wy, 11, 1),       // Week 1: Dec 1
+                new Date(wy + 1, 0, 1),    // Week 2: Jan 1
+                new Date(wy + 1, 1, 1),    // Week 3: Feb 1
+                new Date(wy + 1, 2, 1),    // Week 4: Mar 1
+            ];
+            const s = starts[w];
+            const e = new Date(s); e.setDate(e.getDate() + 6);
+            return { start: s, end: e };
+        }
+
+        function formatDate(d) {
+            return `${d.getDate()} ${MONTH_NAMES[d.getMonth()].slice(0, 3)}`;
+        }
+
+        function getTodayColIndex(w) {
+            const now = new Date();
+            const { start } = getWeekDateRange(w);
+            for (let i = 0; i < 7; i++) {
+                const d = new Date(start); d.setDate(d.getDate() + i);
+                if (d.toDateString() === now.toDateString()) return i;
+            }
+            return -1;
+        }
+
+        // ── SNOWFLAKES & STARS ───────────────────────────────────────────────────────
+        function createSnow() {
+            const bg = document.getElementById('snowBg');
+            for (let i = 0; i < 40; i++) {
+                const f = document.createElement('div');
+                f.className = 'flake';
+                f.textContent = ['❄', '❅', '❆', '·', '*'][Math.floor(Math.random() * 5)];
+                f.style.left = Math.random() * 100 + 'vw';
+                f.style.fontSize = (8 + Math.random() * 14) + 'px';
+                f.style.animationDuration = (6 + Math.random() * 12) + 's';
+                f.style.animationDelay = (-Math.random() * 12) + 's';
+                f.style.opacity = 0.2 + Math.random() * 0.5;
+                bg.appendChild(f);
+            }
+        }
+        function createStars() {
+            const bg = document.getElementById('starsBg');
+            for (let i = 0; i < 60; i++) {
+                const s = document.createElement('div');
+                s.className = 'star';
+                s.style.left = Math.random() * 100 + 'vw';
+                s.style.top = Math.random() * 100 + 'vh';
+                s.style.animationDuration = (2 + Math.random() * 4) + 's';
+                s.style.animationDelay = (-Math.random() * 4) + 's';
+                s.style.opacity = Math.random() * 0.7;
+                bg.appendChild(s);
+            }
+        }
+
+        // ── COUNTDOWN ────────────────────────────────────────────────────────────────
+        function updateCountdown() {
+            const now = new Date();
+            isWinter = checkIsWinter();
+
+            if (isWinter) {
+                document.getElementById('bannerTitle').textContent = '❄ Winter Season is Active!';
+                document.getElementById('bannerSub').textContent = 'Your planner is fully unlocked. Plan your winter weeks!';
+                document.getElementById('timerBlocks').style.display = 'none';
+                document.getElementById('activeBadge').style.display = 'block';
+                document.getElementById('waitingOverlay').classList.remove('show');
+                renderWeekTabs();
+                buildMiniCal(currentWeek);
+                buildScheduleTable(currentWeek);
+            } else {
+                document.getElementById('waitingOverlay').classList.add('show');
+                const target = getWinterStartDate();
+                const diff = target - now;
+                if (diff > 0) {
+                    const days = Math.floor(diff / 86400000);
+                    const hours = Math.floor((diff % 86400000) / 3600000);
+                    const mins = Math.floor((diff % 3600000) / 60000);
+                    document.getElementById('tDays').textContent = days;
+                    document.getElementById('tHours').textContent = hours;
+                    document.getElementById('tMins').textContent = mins;
+                }
+            }
+        }
+
+        // ── WEEK TABS ─────────────────────────────────────────────────────────────────
+        const WEEK_MONTH_LABELS = ['December', 'January', 'February', 'March'];
+
+        function renderWeekTabs() {
+            const container = document.getElementById('weekTabs');
+            container.innerHTML = '';
+            for (let w = 0; w < 4; w++) {
+                const { start, end } = getWeekDateRange(w);
+                const div = document.createElement('div');
+                div.className = 'week-tab' + (w === currentWeek ? ' active' : '');
+                const locked = !isWinter && w > 0;
+                if (locked) div.classList.add('locked');
+
+                div.innerHTML = `
+      <div class="tab-label">Week ${w + 1} of 4</div>
+      <div class="tab-title">${WEEK_MONTH_LABELS[w]}</div>
+      <div class="tab-dates">${formatDate(start)} – ${formatDate(end)}</div>
+      ${locked ? '<div class="lock-icon-tab">🔒</div>' : ''}
+    `;
+                if (!locked) div.onclick = () => switchWeek(w);
+                container.appendChild(div);
+            }
+        }
+
+        function switchWeek(w) {
+            saveCurrentWeekData();
+            currentWeek = w;
+            renderWeekTabs();
+            buildMiniCal(w);
+            buildScheduleTable(w);
+            loadTasks(w);
+            loadHabits(w);
+            loadNotes(w);
+            updateNextBtn();
+        }
+
+        function updateNextBtn() {
+            const btn = document.getElementById('btnNext');
+            btn.disabled = currentWeek >= 3;
+        }
+
+        function goNextWeek() {
+            if (currentWeek >= 3) return;
+            switchWeek(currentWeek + 1);
+            showToast('Moved to Week ' + (currentWeek + 1) + ' ❄');
+        }
+
+        // ── MINI CALENDAR ─────────────────────────────────────────────────────────────
+        function buildMiniCal(w) {
+            const { start } = getWeekDateRange(w);
+            const year = start.getFullYear();
+            const month = start.getMonth();
+            document.getElementById('calMonthLabel').textContent = MONTH_NAMES[month] + ' ' + year;
+
+            const grid = document.getElementById('miniCalGrid');
+            grid.innerHTML = '';
+
+            DAY_LABELS.forEach(d => {
+                const el = document.createElement('div');
+                el.className = 'cal-day-head'; el.textContent = d;
+                grid.appendChild(el);
+            });
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const offset = (firstDay + 6) % 7; // Mon start
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            for (let i = 0; i < offset; i++) {
+                const el = document.createElement('div'); el.className = 'cal-day'; grid.appendChild(el);
+            }
+
+            const now = new Date();
+            const { end } = getWeekDateRange(w);
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const el = document.createElement('div');
+                const thisDate = new Date(year, month, d);
+                let cls = 'cal-day';
+                if (thisDate >= start && thisDate <= end) cls += ' in-week selected-week';
+                if (thisDate.toDateString() === now.toDateString()) cls += ' today';
+                el.className = cls; el.textContent = d;
+                grid.appendChild(el);
+            }
+        }
+
+        // ── SCHEDULE TABLE ────────────────────────────────────────────────────────────
+        function buildScheduleTable(w) {
+            initWeek(w);
+            const { start } = getWeekDateRange(w);
+            const todayCol = getTodayColIndex(w);
+
+            // HEAD
+            const head = document.getElementById('scheduleHead');
+            head.innerHTML = '';
+            let headRow = '<tr><th class="time-head">Time</th>';
+            DAYS.forEach((d, i) => {
+                const date = new Date(start); date.setDate(date.getDate() + i);
+                const isToday = i === todayCol;
+                headRow += `<th class="${isToday ? 'today-col' : ''}">${d}<br><span style="font-weight:300;font-size:9px;opacity:0.7">${date.getDate()}</span></th>`;
+            });
+            head.innerHTML = headRow + '</tr>';
+
+            // BODY
+            const body = document.getElementById('scheduleBody');
+            body.innerHTML = '';
+
+            TIMES.forEach((t, ti) => {
+                const tr = document.createElement('tr');
+                const timeCell = document.createElement('td');
+                timeCell.className = 'time-cell' + (t.half ? ' half' : '');
+                timeCell.textContent = t.label;
+                tr.appendChild(timeCell);
+
+                for (let di = 0; di < 7; di++) {
+                    const td = document.createElement('td');
+                    td.className = 'sched-cell' + (t.half ? ' half-hour' : '');
+                    td.dataset.time = ti;
+                    td.dataset.day = di;
+                    td.dataset.week = w;
+
+                    const key = `${w}_${di}_${ti}`;
+                    const saved = weeks[w].cells[key];
+                    if (saved) renderCellContent(td, saved);
+
+                    td.addEventListener('click', (e) => openContextMenu(e, td, key));
+                    tr.appendChild(td);
+                }
+                body.appendChild(tr);
+            });
+
+            updateNextBtn();
+        }
+
+        function renderCellContent(td, data) {
+            td.innerHTML = '';
+            if (!data || !data.label) return;
+            const span = document.createElement('span');
+            span.className = 'cell-content ' + (data.cls || 'cat-other');
+            span.textContent = (data.icon ? data.icon + ' ' : '') + data.label;
+            span.title = data.label;
+            td.appendChild(span);
+        }
+
+        // ── CONTEXT MENU ──────────────────────────────────────────────────────────────
+        function openContextMenu(e, td, key) {
+            e.stopPropagation();
+            activeCell = { td, key };
+
+            const menu = document.getElementById('contextMenu');
+            const grid = document.getElementById('ctxCatGrid');
+            grid.innerHTML = '';
+
+            CATEGORIES.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'ctx-cat-btn ' + cat.cls;
+                btn.textContent = cat.icon + ' ' + cat.label;
+                btn.style.background = getCatBg(cat.cls);
+                btn.style.color = getCatColor(cat.cls);
+                btn.style.borderColor = 'transparent';
+                btn.onclick = () => applyCategory(cat);
+                grid.appendChild(btn);
+            });
+
+            document.getElementById('ctxCustomText').value = '';
+
+            // Position
+            menu.style.display = 'block';
+            const rect = td.getBoundingClientRect();
+            let left = rect.left + window.scrollX;
+            let top = rect.bottom + window.scrollY + 4;
+            if (left + 230 > window.innerWidth) left = window.innerWidth - 240;
+            if (top + 320 > window.innerHeight + window.scrollY) top = rect.top + window.scrollY - 320;
+            menu.style.left = left + 'px';
+            menu.style.top = top + 'px';
+        }
+
+        function getCatBg(cls) {
+            const map = {
+                'cat-wellness': 'rgba(123,196,160,0.2)',
+                'cat-work': 'rgba(168,216,234,0.2)',
+                'cat-side': 'rgba(232,201,122,0.2)',
+                'cat-personal': 'rgba(232,160,176,0.2)',
+                'cat-meal': 'rgba(180,220,140,0.2)',
+                'cat-study': 'rgba(200,170,255,0.2)',
+                'cat-exercise': 'rgba(255,180,100,0.2)',
+                'cat-social': 'rgba(255,140,160,0.2)',
+                'cat-rest': 'rgba(140,180,255,0.2)',
+                'cat-other': 'rgba(168,216,234,0.1)',
+            };
+            return map[cls] || 'rgba(168,216,234,0.1)';
+        }
+        function getCatColor(cls) {
+            const map = {
+                'cat-wellness': '#7bc4a0', 'cat-work': '#a8d8ea', 'cat-side': '#e8c97a',
+                'cat-personal': '#e8a0b0', 'cat-meal': '#a0d860', 'cat-study': '#c8aaff',
+                'cat-exercise': '#ffb464', 'cat-social': '#ff8ca0', 'cat-rest': '#8cb4ff',
+                'cat-other': '#6a8cad',
+            };
+            return map[cls] || '#a8d8ea';
+        }
+
+        function applyCategory(cat) {
+            if (!activeCell) return;
+            const w = parseInt(activeCell.td.dataset.week);
+            initWeek(w);
+            weeks[w].cells[activeCell.key] = { label: cat.label, cls: cat.cls, icon: cat.icon };
+            renderCellContent(activeCell.td, weeks[w].cells[activeCell.key]);
+            closeContextMenu();
+        }
+
+        function applyCustom() {
+            if (!activeCell) return;
+            const text = document.getElementById('ctxCustomText').value.trim();
+            if (!text) return;
+            const w = parseInt(activeCell.td.dataset.week);
+            initWeek(w);
+            weeks[w].cells[activeCell.key] = { label: text, cls: 'cat-other', icon: '' };
+            renderCellContent(activeCell.td, weeks[w].cells[activeCell.key]);
+            closeContextMenu();
+        }
+
+        function clearCell() {
+            if (!activeCell) return;
+            const w = parseInt(activeCell.td.dataset.week);
+            initWeek(w);
+            delete weeks[w].cells[activeCell.key];
+            activeCell.td.innerHTML = '';
+            closeContextMenu();
+        }
+
+        function closeContextMenu() {
+            document.getElementById('contextMenu').style.display = 'none';
+            activeCell = null;
+        }
+
+        document.addEventListener('click', () => closeContextMenu());
+        document.getElementById('contextMenu').addEventListener('click', e => e.stopPropagation());
+
+        // ── TASKS ─────────────────────────────────────────────────────────────────────
+        function addTask(type) {
+            initWeek(currentWeek);
+            const arr = type === 'important' ? weeks[currentWeek].importantTasks : weeks[currentWeek].secondaryTasks;
+            arr.push({ text: '', done: false });
+            loadTasks(currentWeek);
+        }
+
+        function loadTasks(w) {
+            initWeek(w);
+            renderTaskList('importantTasks', weeks[w].importantTasks, w, 'important');
+            renderTaskList('secondaryTasks', weeks[w].secondaryTasks, w, 'secondary');
+        }
+
+        function renderTaskList(containerId, arr, w, type) {
+            const c = document.getElementById(containerId);
+            c.innerHTML = '';
+            arr.forEach((task, i) => {
+                const row = document.createElement('div');
+                row.className = 'task-input-row';
+                const cb = document.createElement('div');
+                cb.className = 'task-cb' + (task.done ? ' checked' : '');
+                cb.onclick = () => {
+                    task.done = !task.done;
+                    renderTaskList(containerId, arr, w, type);
+                };
+                const inp = document.createElement('input');
+                inp.type = 'text'; inp.className = 'task-input';
+                inp.placeholder = 'Write your task...';
+                inp.value = task.text;
+                inp.oninput = (e) => { arr[i].text = e.target.value; };
+
+                const del = document.createElement('button');
+                del.textContent = '×';
+                del.style.cssText = 'background:none;border:none;color:var(--muted);cursor:pointer;font-size:15px;padding:0 2px;';
+                del.onclick = () => { arr.splice(i, 1); renderTaskList(containerId, arr, w, type); };
+
+                row.appendChild(cb); row.appendChild(inp); row.appendChild(del);
+                c.appendChild(row);
+            });
+        }
+
+        // ── HABITS ───────────────────────────────────────────────────────────────────
+        function addHabit() {
+            initWeek(currentWeek);
+            weeks[currentWeek].habits.push({ name: '', days: [0, 0, 0, 0, 0, 0, 0] });
+            loadHabits(currentWeek);
+        }
+
+        function loadHabits(w) {
+            initWeek(w);
+            const c = document.getElementById('habitList');
+            c.innerHTML = '';
+            weeks[w].habits.forEach((h, hi) => {
+                const row = document.createElement('div');
+                row.className = 'habit-row';
+
+                const inp = document.createElement('input');
+                inp.className = 'habit-name-input'; inp.type = 'text';
+                inp.placeholder = 'Habit name...'; inp.value = h.name;
+                inp.oninput = (e) => { weeks[w].habits[hi].name = e.target.value; };
+
+                const dots = document.createElement('div');
+                dots.className = 'habit-dots';
+                for (let d = 0; d < 7; d++) {
+                    const dot = document.createElement('div');
+                    dot.className = 'habit-dot' + (h.days[d] ? ' done' : '');
+                    dot.title = DAYS[d];
+                    dot.onclick = () => {
+                        weeks[w].habits[hi].days[d] = weeks[w].habits[hi].days[d] ? 0 : 1;
+                        loadHabits(w);
+                    };
+                    dots.appendChild(dot);
+                }
+
+                const del = document.createElement('button');
+                del.textContent = '×';
+                del.style.cssText = 'background:none;border:none;color:var(--muted);cursor:pointer;font-size:15px;padding:0 2px;';
+                del.onclick = () => { weeks[w].habits.splice(hi, 1); loadHabits(w); };
+
+                row.appendChild(inp); row.appendChild(dots); row.appendChild(del);
+                c.appendChild(row);
+            });
+        }
+
+        // ── NOTES ─────────────────────────────────────────────────────────────────────
+        function loadNotes(w) {
+            initWeek(w);
+            document.getElementById('notesArea').value = weeks[w].notes || '';
+        }
+        document.getElementById('notesArea').addEventListener('input', (e) => {
+            initWeek(currentWeek);
+            weeks[currentWeek].notes = e.target.value;
+        });
+
+        // ── SAVE / PRINT ──────────────────────────────────────────────────────────────
+        function saveCurrentWeekData() {
+            initWeek(currentWeek);
+            weeks[currentWeek].notes = document.getElementById('notesArea').value;
+            try { localStorage.setItem('winterPlanner', JSON.stringify(weeks)); } catch (e) { }
+        }
+
+        function saveWeek() {
+            saveCurrentWeekData();
+            showToast('Week ' + (currentWeek + 1) + ' saved ✓');
+        }
+
+        function printWeek() {
+            saveCurrentWeekData();
+            window.print();
+        }
+
+        function loadFromStorage() {
+            try {
+                const saved = localStorage.getItem('winterPlanner');
+                if (saved) weeks = JSON.parse(saved);
+            } catch (e) { }
+        }
+
+        // ── TOAST ─────────────────────────────────────────────────────────────────────
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg; t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2400);
+        }
+
+        // ── INIT ──────────────────────────────────────────────────────────────────────
+        createSnow();
+        createStars();
+        loadFromStorage();
+        initWeek(0);
+        updateCountdown();
+        setInterval(updateCountdown, 60000);
+        loadTasks(0);
+        loadHabits(0);
+        loadNotes(0);
+
+        // Auto-save on unload
+        window.addEventListener('beforeunload', saveCurrentWeekData);
+    </script>
+</body>
+
+</html>

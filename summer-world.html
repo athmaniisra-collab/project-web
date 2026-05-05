@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summer Planner</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --lavender-bg: #e8e0f0;
+            --lavender-light: #f0eaf8;
+            --lavender-mid: #c8b8e0;
+            --lavender-dark: #7a5fa0;
+            --lavender-deep: #5a3d80;
+            --purple-accent: #9370bb;
+            --white: #ffffff;
+            --text-dark: #2d1f45;
+            --text-mid: #5a4575;
+            --border-color: #b8a0d0;
+            --shadow: 0 4px 20px rgba(90, 60, 130, 0.12);
+            --card-bg: #f8f4fd;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--lavender-bg);
+            color: var(--text-dark);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Decorative background texture */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(180, 140, 220, 0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 80%, rgba(150, 110, 200, 0.12) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .planner-wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--lavender-light);
+            border-radius: 20px;
+            padding: 30px;
+            border: 3px solid var(--lavender-mid);
+            box-shadow: 0 8px 40px rgba(90, 60, 130, 0.18), inset 0 0 60px rgba(200, 180, 240, 0.1);
+        }
+
+        /* Decorative corner flourishes */
+        .planner-wrapper::before,
+        .planner-wrapper::after {
+            content: '✦';
+            position: absolute;
+            font-size: 24px;
+            color: var(--lavender-mid);
+        }
+
+        .planner-wrapper::before {
+            top: 10px;
+            left: 14px;
+        }
+
+        .planner-wrapper::after {
+            top: 10px;
+            right: 14px;
+        }
+
+        /* TITLE */
+        .planner-title {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 7vw, 6rem);
+            font-weight: 900;
+            color: var(--lavender-deep);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 28px;
+            text-shadow: 3px 3px 0 var(--lavender-mid), 5px 5px 0 rgba(160, 120, 200, 0.2);
+            position: relative;
+        }
+
+        .planner-title::after {
+            content: '';
+            display: block;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--lavender-dark), var(--purple-accent), var(--lavender-dark), transparent);
+            margin-top: 8px;
+        }
+
+        /* MAIN LAYOUT */
+        .planner-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 18px;
+        }
+
+        /* PANEL CARD */
+        .panel {
+            background: var(--white);
+            border-radius: 14px;
+            border: 2px solid var(--lavender-mid);
+            padding: 18px;
+            box-shadow: var(--shadow);
+        }
+
+        .panel-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--lavender-deep);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            background: var(--lavender-bg);
+            border: 2px solid var(--lavender-mid);
+            border-radius: 8px;
+            padding: 6px 12px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .section-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-mid);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin: 12px 0 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-label::before,
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-color);
+        }
+
+        /* ── LEFT PANEL ── */
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        /* Goals */
+        .goals-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .goal-card {
+            background: var(--lavender-bg);
+            border: 2px solid var(--lavender-mid);
+            border-radius: 10px;
+            padding: 8px;
+            text-align: center;
+            position: relative;
+        }
+
+        .goal-card .goal-num {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--lavender-deep);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .goal-card .checkmark {
+            position: absolute;
+            top: 5px;
+            right: 8px;
+            color: var(--purple-accent);
+            font-size: 0.8rem;
+        }
+
+        .goal-card input[type="text"] {
+            width: 100%;
+            border: none;
+            border-bottom: 1.5px solid var(--border-color);
+            background: transparent;
+            font-size: 0.7rem;
+            color: var(--text-dark);
+            font-family: 'DM Sans', sans-serif;
+            text-align: center;
+            outline: none;
+            margin: 4px 0;
+            padding: 2px 0;
+        }
+
+        .goal-meta {
+            display: flex;
+            justify-content: space-between;
+            gap: 4px;
+            margin-top: 4px;
+        }
+
+        .goal-meta span {
+            font-size: 0.6rem;
+            color: var(--text-mid);
+        }
+
+        .goal-meta input {
+            width: 40px;
+            border: none;
+            border-bottom: 1px solid var(--border-color);
+            background: transparent;
+            font-size: 0.6rem;
+            text-align: center;
+            outline: none;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text-dark);
+        }
+
+        /* Project Pipeline */
+        .pipeline-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.65rem;
+        }
+
+        .pipeline-table th {
+            background: var(--lavender-deep);
+            color: var(--white);
+            padding: 5px 6px;
+            text-align: center;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            font-size: 0.6rem;
+        }
+
+        .pipeline-table td {
+            border: 1px solid var(--border-color);
+            padding: 5px 6px;
+        }
+
+        .pipeline-table td input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-size: 0.65rem;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text-dark);
+            outline: none;
+        }
+
+        .pipeline-table tr:nth-child(odd) td {
+            background: var(--lavender-light);
+        }
+
+        /* To-Do domains */
+        .domains-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .domain-col label {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--text-mid);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .domain-col input[type="checkbox"] {
+            accent-color: var(--purple-accent);
+        }
+
+        .domain-line {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin: 4px 0;
+        }
+
+        .domain-line input[type="text"] {
+            flex: 1;
+            border: none;
+            border-bottom: 1px solid var(--border-color);
+            background: transparent;
+            font-size: 0.65rem;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text-dark);
+            outline: none;
+            padding: 2px 0;
+        }
+
+        /* Habit Tracker */
+        .habit-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.65rem;
+        }
+
+        .habit-table th {
+            background: var(--lavender-deep);
+            color: var(--white);
+            padding: 5px 6px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.6rem;
+            letter-spacing: 0.04em;
+        }
+
+        .habit-table td {
+            border: 1px solid var(--border-color);
+            padding: 5px 8px;
+            text-align: center;
+        }
+
+        .habit-table td:first-child {
+            text-align: left;
+        }
+
+        .habit-table tr:nth-child(odd) td {
+            background: var(--lavender-light);
+        }
+
+        .habit-table td input[type="checkbox"] {
+            accent-color: var(--purple-accent);
+            transform: scale(1.1);
+        }
+
+        /* ── RIGHT PANEL ── */
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .months-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        .month-panel {
+            background: var(--white);
+            border-radius: 14px;
+            border: 2px solid var(--lavender-mid);
+            padding: 14px;
+            box-shadow: var(--shadow);
+        }
+
+        .month-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .month-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--lavender-deep);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .calendar-icon {
+            font-size: 1.4rem;
+        }
+
+        /* Strategic Calendar */
+        .strategic-cal {
+            margin-bottom: 10px;
+        }
+
+        .strategic-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            color: var(--lavender-deep);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .strategic-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-color);
+        }
+
+        .top-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin: 4px 0;
+            font-size: 0.65rem;
+            color: var(--text-mid);
+        }
+
+        .top-item input[type="text"] {
+            flex: 1;
+            border: none;
+            border-bottom: 1px solid var(--border-color);
+            background: transparent;
+            font-size: 0.65rem;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text-dark);
+            outline: none;
+            padding: 1px 0;
+        }
+
+        .check-circle {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 1.5px solid var(--purple-accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            color: var(--purple-accent);
+            font-size: 0.55rem;
+            transition: background 0.2s;
+        }
+
+        .check-circle.checked {
+            background: var(--purple-accent);
+            color: white;
+        }
+
+        /* Calendar Grid */
+        .cal-events-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 8px;
+            align-items: start;
+        }
+
+        .mini-calendar {
+            flex: 1;
+        }
+
+        .mini-cal-title {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-align: center;
+            color: var(--lavender-deep);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 4px;
+        }
+
+        .mini-cal-grid {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.6rem;
+        }
+
+        .mini-cal-grid th {
+            color: var(--purple-accent);
+            font-weight: 700;
+            text-align: center;
+            padding: 2px 1px;
+            font-size: 0.55rem;
+        }
+
+        .mini-cal-grid td {
+            text-align: center;
+            padding: 2px 1px;
+            color: var(--text-dark);
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .mini-cal-grid td:hover {
+            background: var(--lavender-bg);
+        }
+
+        .mini-cal-grid td.today {
+            background: var(--purple-accent);
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+        }
+
+        .mini-cal-grid td.marked {
+            background: var(--lavender-mid);
+            border-radius: 50%;
+        }
+
+        /* Events */
+        .events-col {
+            min-width: 60px;
+        }
+
+        .events-label {
+            font-size: 0.55rem;
+            font-weight: 700;
+            color: var(--text-mid);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+            text-align: right;
+        }
+
+        .event-line {
+            margin: 3px 0;
+        }
+
+        .event-line input {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid var(--border-color);
+            background: transparent;
+            font-size: 0.6rem;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text-dark);
+            outline: none;
+            padding: 1px 0;
+        }
+
+        /* Action Plan */
+        .action-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--lavender-deep);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin: 10px 0 5px;
+            text-align: center;
+        }
+
+        .action-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.58rem;
+        }
+
+        .action-table th {
+            background: var(--lavender-deep);
+            color: white;
+            padding: 4px 3px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.55rem;
+            letter-spacing: 0.04em;
+        }
+
+        .action-table td {
+            border: 1px solid var(--border-color);
+            padding: 3px 4px;
+            vertical-align: top;
+        }
+
+        .action-table td input[type="text"] {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-size: 0.58rem;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text-dark);
+            outline: none;
+        }
+
+        .action-table tr:nth-child(odd) td {
+            background: var(--lavender-light);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 0.55rem;
+            font-weight: 600;
+            padding: 1px 4px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        .status-badge.in-progress {
+            background: #e8f4fd;
+            color: #1a6fa8;
+        }
+
+        .status-badge.complete {
+            background: #e8fdf0;
+            color: #1a8a3a;
+        }
+
+        .status-badge.delegated {
+            background: #f4e8fd;
+            color: #7a2fa8;
+        }
+
+        .status-badge.postponed {
+            background: #fdf4e8;
+            color: #a86a1a;
+        }
+
+        /* Notes & Milestones */
+        .notes-section {
+            margin-top: 10px;
+            border: 1.5px dashed var(--lavender-mid);
+            border-radius: 8px;
+            padding: 8px;
+        }
+
+        .notes-header {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.62rem;
+            font-weight: 700;
+            color: var(--lavender-deep);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 5px;
+        }
+
+        .notes-lines textarea {
+            width: 100%;
+            height: 52px;
+            border: none;
+            background: transparent;
+            font-size: 0.65rem;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text-dark);
+            outline: none;
+            resize: none;
+            line-height: 1.8;
+            background-image: repeating-linear-gradient(transparent, transparent 22px, var(--border-color) 23px);
+        }
+
+        /* ── REFLECTION PANEL ── */
+        .reflection-panel {
+            background: var(--white);
+            border-radius: 14px;
+            border: 2px solid var(--lavender-mid);
+            padding: 14px 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .reflection-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--lavender-deep);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .reflection-title::before,
+        .reflection-title::after {
+            content: '';
+            flex: 1;
+            height: 1.5px;
+            background: var(--lavender-mid);
+        }
+
+        .reflection-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .reflection-col label {
+            font-size: 0.62rem;
+            font-weight: 700;
+            color: var(--text-mid);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            display: block;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .reflection-col textarea {
+            width: 100%;
+            height: 60px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--lavender-light);
+            font-size: 0.65rem;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text-dark);
+            outline: none;
+            resize: none;
+            padding: 6px;
+        }
+
+        .reflection-col textarea:focus {
+            border-color: var(--purple-accent);
+            box-shadow: 0 0 0 2px rgba(147, 112, 187, 0.15);
+        }
+
+        /* Focus styles */
+        input:focus,
+        textarea:focus {
+            background: rgba(200, 184, 224, 0.08) !important;
+        }
+
+        /* Print button */
+        .print-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 auto 20px;
+            padding: 8px 24px;
+            background: var(--lavender-deep);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+            box-shadow: 0 4px 14px rgba(90, 60, 130, 0.3);
+        }
+
+        .print-btn:hover {
+            background: var(--purple-accent);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(90, 60, 130, 0.4);
+        }
+
+        /* Week row label */
+        .week-row td:first-child {
+            color: var(--lavender-mid);
+            font-size: 0.5rem;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+            }
+
+            .planner-wrapper {
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+
+            .print-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="planner-wrapper">
+        <h1 class="planner-title">Summer Planner</h1>
+
+        <div style="text-align:center; margin-bottom:20px;">
+            <button class="print-btn" onclick="window.print()">🖨️ Print Planner</button>
+        </div>
+
+        <div class="planner-grid">
+
+            <!-- ══════════ LEFT PANEL ══════════ -->
+            <div class="left-panel">
+                <div class="panel">
+                    <div class="panel-title">3-Month Strategic Foundation</div>
+
+                    <!-- TOP 3 GOALS -->
+                    <div class="section-label">Top 3 Core Goals</div>
+                    <div class="goals-grid">
+                        <div class="goal-card">
+                            <div class="goal-num">Goal 1 <span class="checkmark">✓</span></div>
+                            <input type="text" placeholder="Goal title..." value="Q3 Project Launch">
+                            <div style="font-size:0.6rem;color:var(--text-mid);margin-top:3px;">PROGRESS</div>
+                            <input type="text" placeholder="..."
+                                style="width:100%;border:none;border-bottom:1px solid var(--border-color);background:transparent;font-size:0.6rem;outline:none;font-family:'DM Sans',sans-serif;">
+                            <div class="goal-meta">
+                                <span>START <input type="text" placeholder="__"></span>
+                                <span>END <input type="text" placeholder="__"></span>
+                            </div>
+                        </div>
+                        <div class="goal-card">
+                            <div class="goal-num">Goal 2 <span class="checkmark">✓</span></div>
+                            <input type="text" placeholder="Goal title..." value="Wellness Program">
+                            <div style="font-size:0.6rem;color:var(--text-mid);margin-top:3px;">PROGRESS</div>
+                            <input type="text" placeholder="..."
+                                style="width:100%;border:none;border-bottom:1px solid var(--border-color);background:transparent;font-size:0.6rem;outline:none;font-family:'DM Sans',sans-serif;">
+                            <div class="goal-meta">
+                                <span>START <input type="text" placeholder="__"></span>
+                                <span>END <input type="text" placeholder="__"></span>
+                            </div>
+                        </div>
+                        <div class="goal-card">
+                            <div class="goal-num">Goal 3 <span class="checkmark">✓</span></div>
+                            <input type="text" placeholder="Goal title..." value="Skills Development">
+                            <div style="font-size:0.6rem;color:var(--text-mid);margin-top:3px;">PROGRESS</div>
+                            <input type="text" placeholder="..."
+                                style="width:100%;border:none;border-bottom:1px solid var(--border-color);background:transparent;font-size:0.6rem;outline:none;font-family:'DM Sans',sans-serif;">
+                            <div class="goal-meta">
+                                <span>START <input type="text" placeholder="__"></span>
+                                <span>END <input type="text" placeholder="__"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PROJECT PIPELINE -->
+                    <div class="section-label" style="margin-top:14px;">Project Pipeline</div>
+                    <table class="pipeline-table">
+                        <thead>
+                            <tr>
+                                <th>PROJECT NAME</th>
+                                <th>KEY MILESTONES</th>
+                                <th>STATUS</th>
+                                <th>DUE DATE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" value="Website Redesign"></td>
+                                <td><input type="text" placeholder="milestones..."></td>
+                                <td><input type="text" placeholder="status..."></td>
+                                <td><input type="text" placeholder="date..."></td>
+                            </tr>
+                            <tr>
+                                <td><input type="text" value="Marketing Campaign"></td>
+                                <td><input type="text" placeholder="milestones..."></td>
+                                <td><input type="text" placeholder="status..."></td>
+                                <td><input type="text" placeholder="date..."></td>
+                            </tr>
+                            <tr>
+                                <td><input type="text" placeholder="project name..."></td>
+                                <td><input type="text" placeholder="milestones..."></td>
+                                <td><input type="text" placeholder="status..."></td>
+                                <td><input type="text" placeholder="date..."></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- MASTER TO-DO -->
+                    <div class="section-label" style="margin-top:14px;">Master To-Do: Functional Domains</div>
+                    <div class="domains-grid">
+                        <div class="domain-col">
+                            <label><input type="checkbox"> Professional Development</label>
+                            <div class="domain-line"><input type="checkbox"><input type="text" placeholder="task...">
+                            </div>
+                            <div class="domain-line"><input type="checkbox"><input type="text" placeholder="task...">
+                            </div>
+                            <div class="domain-line"><input type="checkbox"><input type="text" placeholder="task...">
+                            </div>
+                            <label style="margin-top:8px;"><input type="checkbox"> Personal Well-Being</label>
+                            <div class="domain-line"><input type="checkbox"><input type="text" placeholder="task...">
+                            </div>
+                            <div class="domain-line"><input type="checkbox"><input type="text" placeholder="task...">
+                            </div>
+                            <div class="domain-line"><input type="checkbox"><input type="text" placeholder="task...">
+                            </div>
+                        </div>
+                        <div class="domain-col">
+                            <label><input type="checkbox"> Home & Lifestyle</label>
+                            <div class="domain-line"><input type="checkbox"><input type="text" placeholder="task...">
+                            </div>
+                            <div class="domain-line"><input type="checkbox"><input type="text" placeholder="task...">
+                            </div>
+                            <div class="domain-line"><input type="checkbox"><input type="text" placeholder="task...">
+                            </div>
+                            <label style="margin-top:8px;"><input type="checkbox"> Learning & Growth</label>
+                            <div class="domain-line"><input type="checkbox"><input type="text" placeholder="task...">
+                            </div>
+                            <div class="domain-line"><input type="checkbox"><input type="text" placeholder="task...">
+                            </div>
+                            <div class="domain-line"><input type="checkbox"><input type="text" placeholder="task...">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- HABIT TRACKER -->
+                    <div class="section-label" style="margin-top:14px;">📅 Habit Tracker</div>
+                    <table class="habit-table">
+                        <thead>
+                            <tr>
+                                <th>HABIT</th>
+                                <th>M1</th>
+                                <th>M2</th>
+                                <th>M3</th>
+                                <th>M3</th>
+                            </tr>
+                        </thead>
+                        <tbody id="habitBody">
+                            <!-- Generated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div><!-- /left -->
+
+            <!-- ══════════ RIGHT PANEL ══════════ -->
+            <div class="right-panel">
+                <div class="months-grid" id="monthsGrid">
+                    <!-- Generated by JS -->
+                </div>
+
+                <!-- REFLECTION -->
+                <div class="reflection-panel">
+                    <div class="reflection-title">End-of-3-Month Reflection</div>
+                    <div class="reflection-grid">
+                        <div class="reflection-col">
+                            <label>Achievements</label>
+                            <textarea placeholder="What did you accomplish?"></textarea>
+                        </div>
+                        <div class="reflection-col">
+                            <label>Lessons Learned</label>
+                            <textarea placeholder="What did you learn?"></textarea>
+                        </div>
+                        <div class="reflection-col">
+                            <label>Strategic Pivots</label>
+                            <textarea placeholder="What changed?"></textarea>
+                        </div>
+                        <div class="reflection-col">
+                            <label>Next Steps</label>
+                            <textarea placeholder="What's next?"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /right -->
+
+        </div><!-- /planner-grid -->
+    </div><!-- /wrapper -->
+
+    <script>
+        // ── HABIT TRACKER ──
+        const habits = ['Read daily', 'Exercise 3x', 'Meditate', 'Network'];
+        const habitBody = document.getElementById('habitBody');
+        habits.forEach(h => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+    <td>${h}</td>
+    <td><input type="checkbox" checked></td>
+    <td><input type="checkbox" checked></td>
+    <td><input type="checkbox" checked></td>
+    <td><input type="checkbox" checked></td>
+  `;
+            habitBody.appendChild(tr);
+        });
+        // Add empty row
+        const emptyTr = document.createElement('tr');
+        emptyTr.innerHTML = `<td><input type="text" placeholder="add habit..." style="width:100%;border:none;background:transparent;font-size:0.65rem;outline:none;font-family:'DM Sans',sans-serif;"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>`;
+        habitBody.appendChild(emptyTr);
+
+        const months = [
+            { name: 'June', year: 2026, startDay: 0, days: 30 },
+            { name: 'July', year: 2026, startDay: 2, days: 31 },
+            { name: 'August', year: 2026, startDay: 5, days: 30 },
+        ];
+
+        function buildCalendar(m) {
+            const days = m.days;
+            const start = m.startDay;
+            let cells = [];
+            for (let i = 0; i < start; i++) cells.push('');
+            for (let d = 1; d <= days; d++) cells.push(d);
+
+            let html = `<table class="mini-cal-grid">
+    <thead><tr><th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th></tr></thead>
+    <tbody>`;
+
+            let row = 0;
+            for (let i = 0; i < cells.length; i += 7) {
+                row++;
+                html += `<tr class="week-row"><td style="font-size:0.5rem;color:var(--lavender-mid);">${row}</td>`;
+                break;
+            }
+            html = '';
+            html += `<table class="mini-cal-grid">
+    <thead><tr><th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th></tr></thead>
+    <tbody>`;
+
+            let col = 0;
+            html += '<tr>';
+            for (let s = 0; s < start; s++) {
+                html += '<td></td>';
+                col++;
+            }
+            for (let d = 1; d <= days; d++) {
+                if (col === 7) { html += '</tr><tr>'; col = 0; }
+                html += `<td onclick="this.classList.toggle('marked')">${d}</td>`;
+                col++;
+            }
+            while (col < 7 && col > 0) { html += '<td></td>'; col++; }
+            html += '</tr></tbody></table>';
+            return html;
+        }
+        const actionData = [
+            [false, 'Schedule Launch Meeting', 'Date complete', 'IN PROGRESS'],
+            [false, 'Finalise Budget', 'Date complete', 'COMPLETE'],
+            [false, 'Detailize Campaigns', 'Date complete', 'DELEGATED'],
+            [true, '', '', 'POSTPONED'],
+        ];
+
+        const statusClasses = {
+            'IN PROGRESS': 'in-progress', 'COMPLETE': 'complete', 'DELEGATED': 'delegated', 'POSTPONED': 'postponed'
+        };
+        const statusIcons = {
+            'IN PROGRESS': '⟳', 'COMPLETE': '✓', 'DELEGATED': '⇢', 'POSTPONED': '⏸'
+        };
+
+        function buildActionRows() {
+            return actionData.map(([empty, task, strat, status]) => {
+                const sc = statusClasses[status] || '';
+                const si = statusIcons[status] || '';
+                const taskVal = empty ? '' : task;
+                const stratVal = empty ? '' : strat;
+                return `<tr>
+      <td><input type="checkbox" ${!empty && status === 'COMPLETE' ? 'checked' : ''}></td>
+      <td><input type="text" value="${taskVal}" placeholder="task..."></td>
+      <td><input type="text" value="${stratVal}" placeholder="strategy..."></td>
+      <td><input type="text" placeholder="date..." style="width:50px;"></td>
+      <td><span class="status-badge ${sc}">${si} ${status}</span></td>
+    </tr>`;
+            }).join('');
+        }
+        const grid = document.getElementById('monthsGrid');
+        months.forEach(m => {
+            const panel = document.createElement('div');
+            panel.className = 'month-panel';
+            panel.innerHTML = `
+    <div class="month-header">
+      <div class="month-name">${m.name}</div>
+      <div class="calendar-icon">📅</div>
+    </div>
+
+    <!-- Strategic Calendar -->
+    <div class="strategic-cal">
+      <div class="strategic-label">Strategic Calendar</div>
+      ${[1, 2, 3].map(n => `
+        <div class="top-item">
+          <span class="check-circle" onclick="this.classList.toggle('checked')">✓</span>
+          <span style="font-size:0.6rem;color:var(--text-mid);white-space:nowrap;">TOP ${n}</span>
+          <input type="text" placeholder="priority ${n}...">
+        </div>
+      `).join('')}
+    </div>
+
+    <!-- Calendar + Events -->
+    <div class="cal-events-row">
+      <div class="mini-calendar">
+        <div class="mini-cal-title">${m.name.toUpperCase()}</div>
+        ${buildCalendar(m)}
+      </div>
+      <div class="events-col">
+        <div class="events-label">EVENTS</div>
+        ${[1, 2, 3, 4, 5].map(() => `<div class="event-line"><input type="text" placeholder="..."></div>`).join('')}
+      </div>
+    </div>
+
+    <!-- Detailed Action Plan -->
+    <div class="action-label">⚡ Detailed Action Plan</div>
+    <table class="action-table">
+      <thead>
+        <tr>
+          <th style="width:16px;">☐</th>
+          <th>TASK</th>
+          <th>STRATEGY</th>
+          <th>DUE</th>
+          <th>STATUS</th>
+        </tr>
+      </thead>
+      <tbody>${buildActionRows()}</tbody>
+    </table>
+
+    <!-- Notes & Milestones -->
+    <div class="notes-section">
+      <div class="notes-header">📌 Notes &amp; Milestones</div>
+      <div class="notes-lines">
+        <textarea placeholder="Write your notes and milestones here..."></textarea>
+      </div>
+    </div>
+  `;
+            grid.appendChild(panel);
+        });
+
+        // ══════════════════════════════════════════
+        // AUTO-SAVE & LOAD  (localStorage)
+        // ══════════════════════════════════════════
+
+        const STORAGE_KEY = 'summerPlanner_v1';
+
+        // Collect ALL saveable fields after DOM is fully built
+        function gatherData() {
+            const data = { inputs: {}, checkboxes: {}, checkCircles: {}, markedDays: {}, textareas: {} };
+
+            // text inputs
+            document.querySelectorAll('input[type="text"]').forEach((el, i) => {
+                data.inputs[i] = el.value;
+            });
+
+            // checkboxes
+            document.querySelectorAll('input[type="checkbox"]').forEach((el, i) => {
+                data.checkboxes[i] = el.checked;
+            });
+
+            // check-circles (span toggles)
+            document.querySelectorAll('.check-circle').forEach((el, i) => {
+                data.checkCircles[i] = el.classList.contains('checked');
+            });
+
+            // marked calendar days
+            document.querySelectorAll('.mini-cal-grid td').forEach((el, i) => {
+                data.markedDays[i] = el.classList.contains('marked');
+            });
+
+            // textareas
+            document.querySelectorAll('textarea').forEach((el, i) => {
+                data.textareas[i] = el.value;
+            });
+
+            return data;
+        }
+
+        function applyData(data) {
+            if (!data) return;
+
+            document.querySelectorAll('input[type="text"]').forEach((el, i) => {
+                if (data.inputs?.[i] !== undefined) el.value = data.inputs[i];
+            });
+
+            document.querySelectorAll('input[type="checkbox"]').forEach((el, i) => {
+                if (data.checkboxes?.[i] !== undefined) el.checked = data.checkboxes[i];
+            });
+
+            document.querySelectorAll('.check-circle').forEach((el, i) => {
+                if (data.checkCircles?.[i]) el.classList.add('checked');
+                else el.classList.remove('checked');
+            });
+
+            document.querySelectorAll('.mini-cal-grid td').forEach((el, i) => {
+                if (data.markedDays?.[i]) el.classList.add('marked');
+                else el.classList.remove('marked');
+            });
+
+            document.querySelectorAll('textarea').forEach((el, i) => {
+                if (data.textareas?.[i] !== undefined) el.value = data.textareas[i];
+            });
+        }
+
+        function saveData() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(gatherData()));
+                showToast('✅ Saved automatically!');
+            } catch (e) { console.warn('Save failed', e); }
+        }
+
+        function loadData() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) { applyData(JSON.parse(raw)); showToast('📂 Data loaded!'); }
+            } catch (e) { console.warn('Load failed', e); }
+        }
+
+        // Export to JSON file
+        function exportData() {
+            const blob = new Blob([JSON.stringify(gatherData(), null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'summer_planner_backup.json';
+            a.click();
+            showToast('💾 Exported to JSON file!');
+        }
+
+        // Import from JSON file
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = e => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = ev => {
+                    try {
+                        const data = JSON.parse(ev.target.result);
+                        applyData(data);
+                        saveData();
+                        showToast('✅ Data imported successfully!');
+                    } catch { showToast('❌ Invalid file!'); }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        function clearData() {
+            if (!confirm('⚠️ Clear ALL saved data? This cannot be undone.')) return;
+            localStorage.removeItem(STORAGE_KEY);
+            location.reload();
+        }
+
+        // Toast notification
+        function showToast(msg) {
+            let t = document.getElementById('planner-toast');
+            if (!t) {
+                t = document.createElement('div');
+                t.id = 'planner-toast';
+                t.style.cssText = `position:fixed;bottom:28px;right:28px;background:var(--lavender-deep);color:white;
+      padding:10px 20px;border-radius:30px;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:600;
+      box-shadow:0 4px 20px rgba(90,60,130,0.4);z-index:9999;transition:opacity 0.4s;opacity:0;pointer-events:none;`;
+                document.body.appendChild(t);
+            }
+            t.textContent = msg;
+            t.style.opacity = '1';
+            clearTimeout(t._timer);
+            t._timer = setTimeout(() => { t.style.opacity = '0'; }, 2200);
+        }
+
+        // Auto-save on any input change (debounced)
+        let saveTimer;
+        document.addEventListener('input', () => { clearTimeout(saveTimer); saveTimer = setTimeout(saveData, 800); });
+        document.addEventListener('change', () => { clearTimeout(saveTimer); saveTimer = setTimeout(saveData, 800); });
+        // Also save when clicking check-circles or calendar days
+        document.addEventListener('click', e => {
+            if (e.target.classList.contains('check-circle') || e.target.closest('.mini-cal-grid td')) {
+                clearTimeout(saveTimer); saveTimer = setTimeout(saveData, 500);
+            }
+        });
+        window.addEventListener('load', loadData);
+    </script>
+    <!-- ── SAVE TOOLBAR ── -->
+    <div
+        style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:999;background:rgba(240,234,248,0.92);backdrop-filter:blur(10px);padding:10px 18px;border-radius:40px;border:2px solid var(--lavender-mid);box-shadow:0 6px 30px rgba(90,60,130,0.2);">
+        <button onclick="saveData()" title="Save now"
+            style="background:var(--lavender-deep);color:white;border:none;border-radius:20px;padding:7px 16px;font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;">💾
+            Save</button>
+        <button onclick="exportData()" title="Export JSON backup"
+            style="background:var(--purple-accent);color:white;border:none;border-radius:20px;padding:7px 16px;font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;">📤
+            Export</button>
+        <button onclick="importData()" title="Import JSON backup"
+            style="background:var(--lavender-dark);color:white;border:none;border-radius:20px;padding:7px 16px;font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;">📥
+            Import</button>
+        <button onclick="window.print()" title="Print"
+            style="background:white;color:var(--lavender-deep);border:2px solid var(--lavender-mid);border-radius:20px;padding:7px 16px;font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;">🖨️
+            Print</button>
+        <button onclick="clearData()" title="Clear all data"
+            style="background:white;color:#c0392b;border:2px solid #e8b8b8;border-radius:20px;padding:7px 16px;font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;">🗑️
+            Clear</button>
+    </div>
+</body>
+
+</html>

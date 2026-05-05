@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="ar" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Self-Care Journal 🍂</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Caveat:wght@400;600&family=Lato:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #fdf6ec;
+            --bg-card: #fff8f0;
+            --burnt-orange: #c8571b;
+            --amber: #d4831a;
+            --golden: #e0a830;
+            --rust: #9e3a1f;
+            --deep-brown: #5c2d0e;
+            --warm-cream: #f5e6c8;
+            --sage: #7a8c5e;
+            --muted-red: #b84040;
+            --light-tan: #eedcb8;
+            --shadow: rgba(92, 45, 14, 0.13);
+            --text-dark: #3b1a07;
+            --text-mid: #7a4a1a;
+            --border-dashed: #c8a06a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100vh;
+            font-family: 'Lato', sans-serif;
+            background: linear-gradient(135deg, #f9ead6 0%, #f2d9a8 40%, #e8c88a 70%, #f5ddb0 100%);
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 18px 10px 30px;
+        }
+
+        .journal-wrapper {
+            width: 100%;
+            max-width: 1600px;
+            background: var(--bg-main);
+            border-radius: 22px;
+            box-shadow: 0 12px 50px rgba(92, 45, 14, 0.18);
+            overflow: hidden;
+            position: relative;
+            padding-bottom: 20px;
+        }
+
+        /* Autumn leaf decorations */
+        .leaf-decor {
+            position: absolute;
+            pointer-events: none;
+            z-index: 10;
+            font-size: 1.9rem;
+            opacity: 0.85;
+            animation: sway 4s ease-in-out infinite alternate;
+        }
+
+        .leaf-decor.tl {
+            top: 8px;
+            left: 12px;
+            font-size: 2.4rem;
+        }
+
+        .leaf-decor.tr {
+            top: 8px;
+            right: 12px;
+            font-size: 2.4rem;
+        }
+
+        .leaf-decor.bl {
+            bottom: 70px;
+            left: 12px;
+            animation-delay: 1s;
+        }
+
+        .leaf-decor.br {
+            bottom: 70px;
+            right: 12px;
+            animation-delay: .5s;
+        }
+
+        .leaf-decor.mid-l {
+            top: 50%;
+            left: 6px;
+            font-size: 1.4rem;
+            animation-delay: 2s;
+        }
+
+        .leaf-decor.mid-r {
+            top: 50%;
+            right: 6px;
+            font-size: 1.4rem;
+            animation-delay: 1.5s;
+        }
+
+        @keyframes sway {
+            from {
+                transform: rotate(-8deg) scale(1);
+            }
+
+            to {
+                transform: rotate(8deg) scale(1.08);
+            }
+        }
+
+        /* Header */
+        .journal-header {
+            background: linear-gradient(120deg, #743515 0%, #b9751b 50%, #ad4811 100%);
+            padding: 22px 30px 16px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .journal-header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .header-stickers {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 5px;
+            font-size: 1.6rem;
+        }
+
+        .journal-header h1 {
+            font-family: 'Playfair Display', serif;
+            color: #fff;
+            font-size: 2.5rem;
+            letter-spacing: 1px;
+            line-height: 1.2;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .journal-header h1 span {
+            font-family: 'Caveat', cursive;
+            font-size: 3rem;
+            color: var(--golden);
+            display: block;
+        }
+
+        .autumn-tagline {
+            color: rgba(255, 255, 255, 0.88);
+            font-family: 'Caveat', cursive;
+            font-size: 1.15rem;
+            margin-top: 4px;
+        }
+
+        /* Date row */
+        .date-row {
+            display: flex;
+            gap: 30px;
+            padding: 14px 30px 6px;
+        }
+
+        .date-field {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Caveat', cursive;
+            font-size: 1.15rem;
+            color: var(--text-mid);
+            border-bottom: 2px dashed var(--border-dashed);
+            padding-bottom: 4px;
+        }
+
+        .date-field input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-family: 'Caveat', cursive;
+            font-size: 1.15rem;
+            color: var(--text-dark);
+            outline: none;
+        }
+
+        /* Main layout: left cards + right canvas */
+        .journal-body {
+            display: grid;
+            grid-template-columns: 1fr 440px;
+            gap: 16px;
+            padding: 14px 20px;
+        }
+
+        /* Left: 3-column cards grid */
+        .cards-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 14px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 14px;
+            padding: 14px 14px 12px;
+            border: 2px dashed var(--border-dashed);
+            position: relative;
+            box-shadow: 0 3px 14px var(--shadow);
+        }
+
+        .card.span2 {
+            grid-column: span 2;
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            color: var(--rust);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            justify-content: center;
+            text-align: center;
+        }
+
+        /* Mood */
+        .mood-row {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin: 6px 0 10px;
+        }
+
+        .mood-btn {
+            font-size: 1.9rem;
+            cursor: pointer;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            padding: 3px;
+            background: none;
+            transition: transform .15s, border-color .15s, background .15s;
+        }
+
+        .mood-btn:hover {
+            transform: scale(1.2);
+            background: var(--warm-cream);
+        }
+
+        .mood-btn.selected {
+            border-color: var(--burnt-orange);
+            background: var(--warm-cream);
+            transform: scale(1.18);
+        }
+
+        /* Inputs */
+        .list-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .list-num {
+            color: var(--amber);
+            font-family: 'Caveat', cursive;
+            font-size: 1.1rem;
+            font-weight: 600;
+            min-width: 18px;
+        }
+
+        .list-dot {
+            color: var(--muted-red);
+            font-size: .9rem;
+        }
+
+        .list-input {
+            flex: 1;
+            border: none;
+            border-bottom: 1.5px dotted var(--border-dashed);
+            background: transparent;
+            font-family: 'Lato', sans-serif;
+            font-size: .93rem;
+            color: var(--text-dark);
+            outline: none;
+            padding: 2px 4px;
+        }
+
+        /* Priority */
+        .priority-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 7px;
+        }
+
+        .autumn-checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--amber);
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            transition: background .2s;
+            flex-shrink: 0;
+        }
+
+        .autumn-checkbox.checked {
+            background: var(--amber);
+        }
+
+        .autumn-checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: .85rem;
+            font-weight: bold;
+        }
+
+        /* Habit table */
+        .habit-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .82rem;
+        }
+
+        .habit-table th {
+            color: var(--rust);
+            font-weight: 700;
+            padding: 3px 0;
+            text-align: center;
+        }
+
+        .habit-table td {
+            padding: 4px 2px;
+            text-align: center;
+        }
+
+        .habit-name {
+            text-align: left !important;
+            color: var(--text-mid);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .habit-check {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--amber);
+            border-radius: 3px;
+            cursor: pointer;
+            margin: 0 auto;
+            display: block;
+            background: transparent;
+            transition: background .2s;
+        }
+
+        .habit-check.checked {
+            background: var(--sage);
+            border-color: var(--sage);
+        }
+
+        /* Stress */
+        .stress-numbers {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            margin: 6px 0;
+        }
+
+        .stress-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid var(--light-tan);
+            background: var(--warm-cream);
+            color: var(--text-mid);
+            font-size: .78rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all .15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stress-btn:hover {
+            border-color: var(--amber);
+            color: var(--rust);
+        }
+
+        .stress-btn.selected {
+            background: var(--burnt-orange);
+            border-color: var(--rust);
+            color: white;
+            transform: scale(1.12);
+        }
+
+        /* Feel */
+        .feel-row {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .feel-btn {
+            border: 2px solid var(--light-tan);
+            border-radius: 20px;
+            padding: 3px 10px;
+            font-size: .82rem;
+            cursor: pointer;
+            background: var(--warm-cream);
+            color: var(--text-mid);
+            transition: all .15s;
+            font-family: 'Lato', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .feel-btn:hover {
+            border-color: var(--amber);
+        }
+
+        .feel-btn.selected {
+            background: var(--amber);
+            border-color: var(--rust);
+            color: white;
+        }
+
+        /* Textarea */
+        .journal-textarea {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-family: 'Lato', sans-serif;
+            font-size: .88rem;
+            color: var(--text-dark);
+            resize: none;
+            outline: none;
+            min-height: 70px;
+            border-bottom: 1.5px dotted var(--border-dashed);
+            padding: 4px 0;
+            line-height: 1.9;
+        }
+
+        /* Goals */
+        .goal-item {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin-bottom: 8px;
+        }
+
+        .goal-num {
+            font-family: 'Caveat', cursive;
+            color: var(--burnt-orange);
+            font-size: 1.1rem;
+            font-weight: 600;
+            min-width: 18px;
+        }
+
+        /* Self-care */
+        .activity-input {
+            width: 100%;
+            border: none;
+            border-bottom: 2px solid var(--light-tan);
+            background: var(--warm-cream);
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-family: 'Caveat', cursive;
+            font-size: 1rem;
+            color: var(--text-dark);
+            outline: none;
+            margin-top: 6px;
+        }
+
+        /* Affirmation */
+        .affirmation-line {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: var(--rust);
+            font-size: 1rem;
+            margin: 5px 0;
+            text-align: center;
+        }
+
+        .affirmation-line::before {
+            content: '" ';
+            color: var(--amber);
+        }
+
+        .affirmation-line::after {
+            content: ' "';
+            color: var(--amber);
+        }
+
+        /* Creative Corner — right panel */
+        .creative-panel {
+            background: var(--bg-card);
+            border-radius: 18px;
+            border: 2px dashed var(--border-dashed);
+            box-shadow: 0 3px 14px var(--shadow);
+            padding: 16px 14px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .doodle-hint {
+            color: var(--border-dashed);
+            font-family: 'Caveat', cursive;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        /* Canvas grows to fill available height */
+        .canvas-wrap {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 380px;
+        }
+
+        .canvas-area {
+            flex: 1;
+            width: 100%;
+            min-height: 360px;
+            border: 2px dashed var(--border-dashed);
+            border-radius: 10px;
+            background: #fffaf4;
+            cursor: crosshair;
+            display: block;
+        }
+
+        .canvas-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .color-dot {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2.5px solid transparent;
+            transition: border .15s;
+            flex-shrink: 0;
+        }
+
+        .color-dot:hover,
+        .color-dot.active {
+            border-color: var(--deep-brown);
+        }
+
+        .brush-size {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-family: 'Caveat', cursive;
+            font-size: .9rem;
+            color: var(--text-mid);
+        }
+
+        .brush-size input {
+            width: 70px;
+            accent-color: var(--burnt-orange);
+        }
+
+        .clear-btn {
+            margin-left: auto;
+            font-size: .78rem;
+            color: var(--muted-red);
+            border: 1.5px solid var(--muted-red);
+            border-radius: 10px;
+            padding: 2px 10px;
+            cursor: pointer;
+            background: none;
+            font-family: 'Lato', sans-serif;
+        }
+
+        .clear-btn:hover {
+            background: #f9e0e0;
+        }
+
+        /* Footer */
+        .journal-footer {
+            text-align: center;
+            padding: 14px 20px 10px;
+            font-family: 'Caveat', cursive;
+            font-size: 1.3rem;
+            color: var(--rust);
+            background: linear-gradient(90deg, transparent, #f5e6c8 30%, #eedcb8 70%, transparent);
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        @media (max-width: 1100px) {
+            .journal-body {
+                grid-template-columns: 1fr;
+            }
+
+            .canvas-wrap {
+                min-height: 280px;
+            }
+
+            .canvas-area {
+                min-height: 260px;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .cards-panel {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .card.span2 {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cards-panel {
+                grid-template-columns: 1fr;
+            }
+
+            .card.span2 {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="journal-wrapper">
+
+        <div class="leaf-decor tl">🍂</div>
+        <div class="leaf-decor tr">🍁</div>
+        <div class="leaf-decor bl">🍄</div>
+        <div class="leaf-decor br">🌰</div>
+        <div class="leaf-decor mid-l">🍁</div>
+        <div class="leaf-decor mid-r">🍂</div>
+
+        <!-- Header -->
+        <div class="journal-header">
+            <div class="header-stickers">🍂 🍁 🌾 🍁 🍂</div>
+            <h1><span>My</span>Self-Care Journal</h1>
+            <div class="autumn-tagline">✨ Embrace the cozy season within you ✨</div>
+        </div>
+
+        <!-- Date -->
+        <div class="date-row">
+            <div class="date-field">🍁 Date: <input type="date" id="date-input"></div>
+            <div class="date-field">🌾 Day: <input type="text" id="day-input" placeholder="Monday..."></div>
+        </div>
+
+        <!-- Body -->
+        <div class="journal-body">
+
+            <!-- LEFT: cards -->
+            <div class="cards-panel">
+
+                <!-- Mood + Gratitude -->
+                <div class="card">
+                    <div class="card-title"><span>🍂</span> Mood Tracker <span>🍂</span></div>
+                    <div class="mood-row" id="mood-row">
+                        <button class="mood-btn" title="Happy">😊</button>
+                        <button class="mood-btn" title="Okay">🙂</button>
+                        <button class="mood-btn" title="Neutral">😐</button>
+                        <button class="mood-btn" title="Sad">😔</button>
+                        <button class="mood-btn" title="Tired">😴</button>
+                    </div>
+                    <div class="card-title" style="margin-top:8px"><span>🌰</span> Gratitude List <span>🌰</span></div>
+                    <div class="list-item"><span class="list-num">1.</span><input class="list-input" type="text"
+                            placeholder="I'm grateful for..."><span class="list-dot">🍁</span></div>
+                    <div class="list-item"><span class="list-num">2.</span><input class="list-input" type="text"
+                            placeholder="I'm grateful for..."><span class="list-dot">🍂</span></div>
+                    <div class="list-item"><span class="list-num">3.</span><input class="list-input" type="text"
+                            placeholder="I'm grateful for..."><span class="list-dot">🍄</span></div>
+                </div>
+
+                <!-- Habit Tracker -->
+                <div class="card span2">
+                    <div class="card-title"><span>🌾</span> Habit Tracker <span>🌾</span></div>
+                    <table class="habit-table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Mon</th>
+                                <th>Tue</th>
+                                <th>Wed</th>
+                                <th>Thu</th>
+                                <th>Fri</th>
+                                <th>Sat</th>
+                                <th>Sun</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="habit-name">💧 Water</td>
+                                <td>
+                                    <div class="habit-check" onclick="toggleHabit(this)"></div>
+                                </td>
+                                <td>
+                                    <div class="habit-check" onclick="toggleHabit(this)"></div>
+                                </td>
+                                <td>
+                                    <div class="habit-check" onclick="toggleHabit(this)"></div>
+                                </td>
+                                <td>
+                                    <div class="habit-check" onclick="toggleHabit(this)"></div>
+                                </td>
+                                <td>
+                                    <div class="habit-check" onclick="toggleHabit(this)"></div>
+                                </td>
+                                <td>
+                                    <div class="habit-check" onclick="toggleHabit(this)"></div>
+                                </td>
+                                <td>
+                                    <div class="habit-check" onclick="toggleHabit(this)"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="habit-name">🏃 Exercise</td>
+                                <td>
+                                    <div class="habit-check" onclick="toggleHabit(this)"></div>
+                                </td>
+                                <td>
+                                    <div class="habit-check" onclick="toggleHabit(this)"></div>
+                                </td>
+                                <td>
+                                    <div class="habit-check" onclick="toggleHabit(this)"></div>
+                                </td>
+                                <td>
+                                    <div class="habit-check" onclick="toggleHabit(this)"></div>
+                                </td>
+                                <td>
+                                    <div class="habit-check" onclick="toggleHabit(this)"></div>
+                                </td>
+                                <td>
+                                    <div class="habit-check" onclick="toggleHabit(this)"></div>
+                                </td>
+                                <td>
+                                    <div class="habit-check" onclick="toggleHabit(this)"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="habit-name">🧘 Meditation</td>
+                                <td>
+                                    <div class="habit-check" onclick="toggleHabit(this)"></div>
+                                </td>
+                                <td>
+                                    <div class="habit-check" onclick="toggleHabit(this)"></div>
+                                </td>
+                                <td>
+                                    <div class="habit-check" onclick="toggleHabit(this)"></div>
+                                </td>
+                                <td>
+                                    <div class="habit-check" onclick="toggleHabit(this)"></div>
+                                </td>
+                                <td>
+                                    <div class="habit-check" onclick="toggleHabit(this)"></div>
+                                </td>
+                                <td>
+                                    <div class="habit-check" onclick="toggleHabit(this)"></div>
+                                </td>
+                                <td>
+                                    <div class="habit-check" onclick="toggleHabit(this)"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="habit-name">🌙 Sleep</td>
+                                <td>
+                                    <div class="habit-check" onclick="toggleHabit(this)"></div>
+                                </td>
+                                <td>
+                                    <div class="habit-check" onclick="toggleHabit(this)"></div>
+                                </td>
+                                <td>
+                                    <div class="habit-check" onclick="toggleHabit(this)"></div>
+                                </td>
+                                <td>
+                                    <div class="habit-check" onclick="toggleHabit(this)"></div>
+                                </td>
+                                <td>
+                                    <div class="habit-check" onclick="toggleHabit(this)"></div>
+                                </td>
+                                <td>
+                                    <div class="habit-check" onclick="toggleHabit(this)"></div>
+                                </td>
+                                <td>
+                                    <div class="habit-check" onclick="toggleHabit(this)"></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Priorities + Self-Care -->
+                <div class="card">
+                    <div class="card-title"><span>🍁</span> Top 3 Priorities <span>🍁</span></div>
+                    <div class="priority-item">
+                        <div class="autumn-checkbox" onclick="toggleCheck(this)"></div><input class="list-input"
+                            type="text" placeholder="Priority 1...">
+                    </div>
+                    <div class="priority-item">
+                        <div class="autumn-checkbox" onclick="toggleCheck(this)"></div><input class="list-input"
+                            type="text" placeholder="Priority 2...">
+                    </div>
+                    <div class="priority-item">
+                        <div class="autumn-checkbox" onclick="toggleCheck(this)"></div><input class="list-input"
+                            type="text" placeholder="Priority 3...">
+                    </div>
+                    <div class="card-title" style="margin-top:12px"><span>🍄</span> Self-Care Activity <span>🍄</span>
+                    </div>
+                    <div style="font-family:'Caveat',cursive;color:var(--text-mid);font-size:.95rem;">Today I will do:
+                    </div>
+                    <input class="activity-input" type="text" placeholder="Take a cozy autumn walk...">
+                </div>
+
+                <!-- Goals + Affirmation -->
+                <div class="card">
+                    <div class="card-title"><span>🌰</span> Today's Goals <span>🌰</span></div>
+                    <div class="goal-item"><span class="goal-num">1.</span><input class="list-input" type="text"
+                            placeholder="Goal one..."></div>
+                    <div class="goal-item"><span class="goal-num">2.</span><input class="list-input" type="text"
+                            placeholder="Goal two..."></div>
+                    <div class="goal-item"><span class="goal-num">3.</span><input class="list-input" type="text"
+                            placeholder="Goal three..."></div>
+                    <div
+                        style="margin-top:12px;border-radius:10px;padding:10px;border:2px dashed var(--amber);background:linear-gradient(135deg,#f5e6c8,#eedcb8);">
+                        <div class="card-title" style="margin-bottom:4px;">🍂 Positive Affirmation 🍂</div>
+                        <div class="affirmation-line">I am enough</div>
+                        <div class="affirmation-line">I deserve happiness</div>
+                        <div class="affirmation-line">I take care of myself</div>
+                    </div>
+                </div>
+
+                <!-- Emotional Check-In + Notes -->
+                <div class="card">
+                    <div class="card-title"><span>🍁</span> Emotional Check-In <span>🍁</span></div>
+                    <div style="font-family:'Caveat',cursive;color:var(--text-mid);font-size:.95rem;margin-bottom:4px;">
+                        Stress Level (1-10):</div>
+                    <div class="stress-numbers">
+                        <button class="stress-btn" onclick="selectStress(this)">1</button>
+                        <button class="stress-btn" onclick="selectStress(this)">2</button>
+                        <button class="stress-btn" onclick="selectStress(this)">3</button>
+                        <button class="stress-btn" onclick="selectStress(this)">4</button>
+                        <button class="stress-btn" onclick="selectStress(this)">5</button>
+                        <button class="stress-btn" onclick="selectStress(this)">6</button>
+                        <button class="stress-btn" onclick="selectStress(this)">7</button>
+                        <button class="stress-btn" onclick="selectStress(this)">8</button>
+                        <button class="stress-btn" onclick="selectStress(this)">9</button>
+                        <button class="stress-btn" onclick="selectStress(this)">10</button>
+                    </div>
+                    <div
+                        style="font-family:'Caveat',cursive;color:var(--text-mid);font-size:.95rem;margin-top:6px;margin-bottom:4px;">
+                        I feel:</div>
+                    <div class="feel-row">
+                        <button class="feel-btn" onclick="toggleFeel(this)">😊 Happy</button>
+                        <button class="feel-btn" onclick="toggleFeel(this)">😢 Sad</button>
+                        <button class="feel-btn" onclick="toggleFeel(this)">😰 Anxious</button>
+                        <button class="feel-btn" onclick="toggleFeel(this)">⚡ Excited</button>
+                        <button class="feel-btn" onclick="toggleFeel(this)">🍂 Cozy</button>
+                        <button class="feel-btn" onclick="toggleFeel(this)">🌿 Calm</button>
+                    </div>
+                    <div class="card-title" style="margin-top:12px"><span>🌾</span> Notes <span>🌾</span></div>
+                    <textarea class="journal-textarea" placeholder="Write your thoughts here... 🍂"></textarea>
+                </div>
+
+            </div><!-- end cards-panel -->
+
+            <!-- RIGHT: Creative Corner -->
+            <div class="creative-panel">
+                <div class="card-title"><span>✏️</span> Creative Corner <span>✏️</span></div>
+                <div class="doodle-hint">🍁 Doodle / Draw / Write 🍁</div>
+                <div class="canvas-wrap">
+                    <canvas class="canvas-area" id="doodle-canvas"></canvas>
+                </div>
+                <div class="canvas-controls">
+                    <div class="color-dot active" style="background:#c8571b" data-color="#c8571b"
+                        onclick="setColor(this)" title="Burnt Orange"></div>
+                    <div class="color-dot" style="background:#d4831a" data-color="#d4831a" onclick="setColor(this)"
+                        title="Amber"></div>
+                    <div class="color-dot" style="background:#e0a830" data-color="#e0a830" onclick="setColor(this)"
+                        title="Golden"></div>
+                    <div class="color-dot" style="background:#7a8c5e" data-color="#7a8c5e" onclick="setColor(this)"
+                        title="Sage"></div>
+                    <div class="color-dot" style="background:#5c2d0e" data-color="#5c2d0e" onclick="setColor(this)"
+                        title="Deep Brown"></div>
+                    <div class="color-dot" style="background:#b84040" data-color="#b84040" onclick="setColor(this)"
+                        title="Rust Red"></div>
+                    <div class="color-dot" style="background:#ffffff;border:2px solid #c8a06a" data-color="#ffffff"
+                        onclick="setColor(this)" title="Eraser"></div>
+                    <div class="brush-size">🖌 <input type="range" id="brush-size" min="1" max="20" value="3"></div>
+                    <button class="clear-btn" onclick="clearCanvas()">🗑 Clear</button>
+                </div>
+            </div>
+
+        </div><!-- end journal-body -->
+
+        <div class="journal-footer">🍂 Take Care of Yourself First 🍁</div>
+
+    </div>
+
+    <script>
+        // Date
+        const dateInput = document.getElementById('date-input');
+        const dayInput = document.getElementById('day-input');
+        const now = new Date();
+        dateInput.value = now.toISOString().split('T')[0];
+        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        dayInput.value = days[now.getDay()];
+
+        // Mood
+        document.getElementById('mood-row').addEventListener('click', e => {
+            const btn = e.target.closest('.mood-btn');
+            if (!btn) return;
+            document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+        });
+
+        function toggleHabit(el) { el.classList.toggle('checked'); }
+        function toggleCheck(el) { el.classList.toggle('checked'); }
+        function selectStress(el) {
+            document.querySelectorAll('.stress-btn').forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+        function toggleFeel(el) { el.classList.toggle('selected'); }
+
+        // Canvas
+        const canvas = document.getElementById('doodle-canvas');
+        const ctx = canvas.getContext('2d');
+        const brushInput = document.getElementById('brush-size');
+        let drawing = false, currentColor = '#c8571b', lastX = 0, lastY = 0;
+        let savedImage = null;
+
+        function resizeCanvas() {
+            savedImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = Math.floor(rect.width);
+            canvas.height = Math.floor(rect.height);
+            if (savedImage) {
+                try { ctx.putImageData(savedImage, 0, 0); } catch (e) { }
+            }
+        }
+        window.addEventListener('load', resizeCanvas);
+        window.addEventListener('resize', () => setTimeout(resizeCanvas, 80));
+
+        function getPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const src = e.touches ? e.touches[0] : e;
+            return { x: src.clientX - rect.left, y: src.clientY - rect.top };
+        }
+
+        canvas.addEventListener('mousedown', e => {
+            drawing = true;
+            const p = getPos(e); lastX = p.x; lastY = p.y;
+        });
+        canvas.addEventListener('mousemove', e => {
+            if (!drawing) return;
+            const p = getPos(e);
+            ctx.strokeStyle = currentColor;
+            ctx.lineWidth = parseFloat(brushInput.value);
+            ctx.lineCap = ctx.lineJoin = 'round';
+            ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(p.x, p.y); ctx.stroke();
+            lastX = p.x; lastY = p.y;
+        });
+        canvas.addEventListener('mouseup', () => drawing = false);
+        canvas.addEventListener('mouseleave', () => drawing = false);
+
+        canvas.addEventListener('touchstart', e => {
+            e.preventDefault(); drawing = true;
+            const p = getPos(e); lastX = p.x; lastY = p.y;
+        }, { passive: false });
+        canvas.addEventListener('touchmove', e => {
+            e.preventDefault();
+            if (!drawing) return;
+            const p = getPos(e);
+            ctx.strokeStyle = currentColor;
+            ctx.lineWidth = parseFloat(brushInput.value);
+            ctx.lineCap = ctx.lineJoin = 'round';
+            ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(p.x, p.y); ctx.stroke();
+            lastX = p.x; lastY = p.y;
+        }, { passive: false });
+        canvas.addEventListener('touchend', () => drawing = false);
+
+        function setColor(el) {
+            document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+            el.classList.add('active');
+            currentColor = el.dataset.color;
+        }
+        function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+    </script>
+</body>
+
+</html>

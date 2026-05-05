@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="dreamstar.css">
+    <link rel="icon" href="you can.jpg">
+</head>
+
+<body>
+    <!-- MOVING HEADER -->
+    <header class="site-header">
+        <div class="header-track">
+            <span>✦</span>
+            <span>dream big,little star💙</span>
+            <span>✦</span>
+            <span>chase your magic 🪄</span>
+            <span>✦</span>
+            <span>make it happen</span>
+            <span>✦</span>
+            <span>plan, do, shine</span>
+            <span>✦</span>
+            <span>follow your heart's glow</span>
+            <span>✦</span>
+            <span>welcome to your cozy space</span>
+            <span>✦</span>
+            <span>ready to start somthing beautiful?💙</span>
+            <span>✦</span>
+        </div>
+    </header>
+    <!-- FALLING PETALS -->
+    <div class="right-part">
+        <a href="#home"></a>
+        <a href="#seasons"></a>
+    </div>
+    <section id="home">
+        <!-- MAIN WRAPPER -->
+        <div class="wrapper">
+            <!-- GLASS CONTAINER -->
+            <div class="container card" id="container">
+                <!-- LOGIN PANEL -->
+                <div class="panel login-panel form-box active" id="loginPanel">
+                    <h2>Login</h2>
+                    <div id="login-msg" class="msg-box"></div>
+
+                    <form action="auth.php" method="POST" id="loginForm">
+                        <input type="hidden" name="action" value="login" />
+                        <!--email-->
+                        <div class="input-group">
+                            <span class="icons"><img src="email.png" width="15px" alt="email"></span>
+                            <ion-icon name="mail-outline"></ion-icon>
+                            <input type="email" required>
+                            <label>Email</label>
+                        </div>
+                        <!--password-->
+                        <div class="input-group">
+                            <span class="icons"> <img src="lock.png" width="15px" alt="lock"></span>
+                            <input type="password" id="loginPass" required />
+                            <label>Password</label>
+                        </div>
+
+                        <div class="options">
+                            <label><input type="checkbox" name="remember" /> Remember me</label>
+                            <a href="#">Forgot password?</a>
+                        </div>
+
+                        <button type="submit" class="btn">login</button>
+                    </form>
+
+                    <p class="switch">Don't have an account? <a href="#" onclick="switchForm('register')">Register</a>
+                    </p>
+                </div>
+
+                <!-- VERTICAL DIVIDER -->
+                <div class="v-divider"></div>
+
+                <!-- REGISTER PANEL -->
+                <div class="panel register-panel form-box" id="registerPanel">
+
+                    <h2>Registration</h2>
+
+                    <div id="register-msg" class="msg-box"></div>
+
+                    <form action="auth.php" method="POST" id="registerForm">
+                        <input type="hidden" name="action" value="register" />
+                        <!--username-->
+                        <div class="input-group">
+                            <span class="icons"><img src="user.png" width="15px" alt="user"></span>
+                            <input type="text" required />
+                            <label>Username</label>
+                        </div>
+                        <!--email-->
+                        <div class="input-group">
+                            <span class="icons"><img src="email.png" width="15px" alt="email"></span>
+                            <input type="email" required>
+                            <label>Email</label>
+                        </div>
+                        <!--password-->
+                        <div class="input-group">
+                            <span class="icons"> <img src="lock.png" width="15px" alt="lock"></span>
+                            <input type="password" id="regPass" required />
+                            <label>Password</label>
+
+                        </div>
+                        <!--confirm password-->
+                        <div class="input-group">
+                            <span class="icons"> <img src="lock.png" width="15px" alt="lock"></span>
+                            <input type="password" required />
+                            <label> Confirm Password</label>
+                        </div>
+
+                        <div class="options">
+                            <label><input type="checkbox" name="terms" required /> I agree to the <a href="#">terms
+                                    &amp;
+                                    conditions</a></label>
+                        </div>
+
+                        <button type="submit" class="btn">register</button>
+                    </form>
+
+                    <p class="switch">Already have an account? <a href="#" onclick="switchForm('login')">Login</a></p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <section id="seasons">
+        <div class="title">
+            <h1>Seasons</h1>
+        </div>
+        <div class="side-menu">
+            <a href="spring-world.html" target="_blank" class="menu-item spring-btn" title="spring world"></a>
+            <a href="summer-world.html" target="_blank" class="menu-item summer-btn" title="summer world"></a>
+            <a href="fall-world.html" target="_blank" class="menu-item fall-btn" title="fall-world"></a>
+            <a href="winter-world.html" target="_blank" class="menu-item winter-btn" title="winter-world"></a>
+        </div>
+        <div class="seasons-gallery">
+            <div class="column ">
+                <img src="spring.jpg" alt="spring">
+            </div>
+            <div class="column">
+                <img src="summer (2).jpg" alt="summer">
+            </div>
+            <div class="column">
+                <img src="fall.jpg" alt="fall">
+            </div>
+            <div class="column">
+                <img src="winter.jpg" alt="winter">
+            </div>
+            <div class="global-rain">
+                <span style="--i:1"></span> <span style="--i:12"></span>
+                <span style="--i:5"></span> <span style="--i:18"></span>
+                <span style="--i:8"></span> <span style="--i:24"></span>
+                <span style="--i:2"></span> <span style="--i:15"></span>
+                <span style="--i:7"></span> <span style="--i:21"></span>
+            </div>
+        </div>
+    </section>
+
+    <script src="dreamstar.js"></script>
+</body>
+
+</html>

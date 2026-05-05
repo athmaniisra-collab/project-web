@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velvet Growth – Daily Planner</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora:ital,wght@0,400;0,600;1,400&family=Nunito:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --cream: #f9f3e8;
+            --parchment: #f0e8d0;
+            --soft-green: #7a9e6e;
+            --moss: #5a7a50;
+            --rose: #e8a0a8;
+            --blush: #f2c4cc;
+            --lavender: #c4aee0;
+            --lilac: #ddd0f0;
+            --gold: #c8a84b;
+            --warm-gold: #e8c870;
+            --brown: #8b6240;
+            --text-dark: #3d2b1a;
+            --text-mid: #6b4c30;
+            --shadow: rgba(100, 70, 30, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: #d4c8b0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 24px 12px;
+        }
+
+        .page {
+            width: 1200px;
+            background: var(--cream);
+            border-radius: 18px;
+            padding: 28px 28px 36px;
+            position: relative;
+            box-shadow: 0 12px 48px rgba(80, 50, 20, 0.22), 0 2px 8px rgba(80, 50, 20, 0.1);
+            overflow: hidden;
+        }
+
+        /* === DECORATIVE BACKGROUND === */
+        .page::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 60% 20% at 50% 0%, rgba(196, 174, 224, 0.35) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 15% at 50% 100%, rgba(122, 158, 110, 0.3) 0%, transparent 70%),
+                radial-gradient(ellipse 30% 30% at 10% 50%, rgba(232, 160, 168, 0.15) 0%, transparent 60%),
+                radial-gradient(ellipse 30% 30% at 90% 50%, rgba(232, 160, 168, 0.15) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Sparkle dots */
+        .sparkles {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: rgba(232, 200, 112, 0.7);
+            box-shadow: 0 0 6px 2px rgba(232, 200, 112, 0.5);
+            animation: twinkle 2.5s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+
+            0%,
+            100% {
+                opacity: 0.2;
+                transform: scale(0.8);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.3);
+            }
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* === HEADER === */
+
+        .header {
+            text-align: center;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .wisteria-bar {
+            height: 48px;
+            background: linear-gradient(90deg, transparent 0%, rgba(196, 174, 224, 0.6) 20%, rgba(196, 174, 224, 0.8) 50%, rgba(196, 174, 224, 0.6) 80%, transparent 100%);
+            border-radius: 30px;
+            margin-bottom: -14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wisteria-bar::after {
+            content: '🌸 🦋 🌸 🌷 🌸 🦋 🌸 🌷 🌸 🦋 🌸 🌷 🌸';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 13px;
+            white-space: nowrap;
+            letter-spacing: 4px;
+            opacity: 0.8;
+        }
+
+        .title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 64px;
+            color: var(--moss);
+            text-shadow: 2px 2px 0 rgba(122, 158, 110, 0.2), 0 0 30px rgba(122, 158, 110, 0.3);
+            line-height: 1;
+            margin: 8px 0 4px;
+        }
+
+        .subtitle-ribbon {
+            display: inline-block;
+            background: linear-gradient(90deg, var(--gold) 0%, var(--warm-gold) 50%, var(--gold) 100%);
+            color: var(--text-dark);
+            font-family: 'Lora', serif;
+            font-style: italic;
+            font-size: 15px;
+            padding: 8px 36px;
+            border-radius: 4px;
+            position: relative;
+            box-shadow: 0 3px 10px rgba(100, 70, 20, 0.25);
+            clip-path: polygon(16px 0%, calc(100% - 16px) 0%, 100% 50%, calc(100% - 16px) 100%, 16px 100%, 0% 50%);
+        }
+
+        /* === GRID LAYOUT === */
+        .top-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin-top: 16px;
+            align-items: start;
+        }
+
+        /* === CARDS === */
+        .card {
+            background: rgba(255, 252, 244, 0.85);
+            border: 1.5px solid rgba(200, 168, 75, 0.3);
+            border-radius: 12px;
+            padding: 14px 14px 12px;
+            box-shadow: 0 3px 12px var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(4px);
+        }
+
+        .card-title {
+            font-family: 'Lora', serif;
+            font-style: italic;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card-title .icon {
+            font-size: 14px;
+        }
+
+        /* === SCHEDULE === */
+        .schedule-lines {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .schedule-line {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .dot-rose {
+            background: var(--rose);
+        }
+
+        .dot-lavender {
+            background: var(--lavender);
+        }
+
+        .dot-green {
+            background: var(--soft-green);
+        }
+
+        .dot-gold {
+            background: var(--gold);
+        }
+
+        .dot-blush {
+            background: var(--blush);
+        }
+
+        .line-input {
+            flex: 1;
+            background: none;
+            border: none;
+            border-bottom: 1px solid rgba(139, 98, 64, 0.25);
+            padding: 2px 4px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 12px;
+            color: var(--text-mid);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .line-input:focus {
+            border-bottom-color: var(--soft-green);
+        }
+
+        .line-input::placeholder {
+            color: rgba(139, 98, 64, 0.3);
+        }
+
+        /* === AFFIRMATION === */
+        .affirmation-card {
+            background: rgba(255, 252, 244, 0.7);
+            border: 1.5px dashed rgba(200, 168, 75, 0.4);
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 140px;
+        }
+
+        .affirmation-text {
+            font-family: 'Lora', serif;
+            font-style: italic;
+            font-size: 15px;
+            color: var(--text-mid);
+            line-height: 1.5;
+        }
+
+        .roses-emoji {
+            font-size: 22px;
+            letter-spacing: 3px;
+        }
+
+        /* === PRIORITIES === */
+        .priority-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .priority-num {
+            width: 22px;
+            height: 22px;
+            background: linear-gradient(135deg, var(--gold), var(--warm-gold));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-dark);
+            flex-shrink: 0;
+            box-shadow: 0 2px 4px rgba(100, 70, 20, 0.2);
+        }
+
+        /* === MIDDLE ROW === */
+        .mid-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.1fr 1fr;
+            gap: 12px;
+            margin-top: 12px;
+            align-items: start;
+        }
+
+        /* === TODO === */
+        .todo-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .checkbox {
+            width: 16px;
+            height: 16px;
+            border: 1.5px solid var(--soft-green);
+            border-radius: 3px;
+            flex-shrink: 0;
+            cursor: pointer;
+            position: relative;
+            background: white;
+            transition: background 0.2s;
+        }
+
+        .checkbox.checked {
+            background: var(--soft-green);
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .todo-motto {
+            font-size: 10px;
+            font-style: italic;
+            color: var(--soft-green);
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        /* === HYDRATE === */
+        .hydrate-card {
+            background: linear-gradient(135deg, rgba(180, 220, 240, 0.3) 0%, rgba(200, 230, 255, 0.4) 100%);
+            border: 1.5px solid rgba(100, 170, 210, 0.35);
+            text-align: center;
+        }
+
+        .hydrate-title {
+            font-family: 'Lora', serif;
+            font-style: italic;
+            font-size: 15px;
+            font-weight: 600;
+            color: #5090b0;
+            margin-bottom: 6px;
+        }
+
+        .hydrate-sub {
+            font-size: 11px;
+            font-style: italic;
+            color: #6080a0;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .water-drops {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .drop {
+            font-size: 24px;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.15s;
+            opacity: 0.4;
+            filter: grayscale(0.5);
+        }
+
+        .drop.filled {
+            opacity: 1;
+            filter: none;
+            transform: scale(1.1);
+        }
+
+        /* === SELF CARE === */
+        .selfcare-card {
+            background: linear-gradient(135deg, rgba(232, 160, 168, 0.15), rgba(221, 208, 240, 0.2));
+            border: 1.5px solid rgba(200, 150, 170, 0.3);
+        }
+
+        .selfcare-subtitle {
+            font-size: 11px;
+            font-style: italic;
+            color: var(--text-mid);
+            margin-bottom: 10px;
+        }
+
+        .selfcare-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+        }
+
+        .selfcare-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+
+        .selfcare-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .selfcare-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .selfcare-icon.rest-icon {
+            background: #8b7fc0;
+        }
+
+        .selfcare-icon.read-icon {
+            background: #a07050;
+        }
+
+        .selfcare-icon.reflect-icon {
+            background: #608060;
+        }
+
+        .selfcare-icon.active {
+            border-color: var(--gold);
+            box-shadow: 0 0 10px rgba(200, 168, 75, 0.5);
+        }
+
+        .selfcare-label {
+            font-size: 10px;
+            color: var(--text-mid);
+            font-weight: 600;
+        }
+
+        /* === BOTTOM GRID === */
+        .bot-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        /* === MOOD === */
+        .mood-subtitle {
+            font-size: 11px;
+            font-style: italic;
+            color: var(--text-mid);
+            margin-bottom: 10px;
+        }
+
+        .mood-pots {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+        }
+
+        .mood-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+
+        .mood-emoji {
+            font-size: 28px;
+            transition: transform 0.2s;
+            filter: grayscale(0.3);
+            opacity: 0.7;
+        }
+
+        .mood-item.selected .mood-emoji {
+            transform: scale(1.2);
+            filter: none;
+            opacity: 1;
+        }
+
+        .mood-label {
+            font-size: 9px;
+            color: var(--text-mid);
+            font-weight: 600;
+        }
+
+        /* === EXERCISE === */
+        .exercise-card {
+            text-align: center;
+        }
+
+        .exercise-sub {
+            font-size: 11px;
+            font-style: italic;
+            color: var(--text-mid);
+            margin-bottom: 12px;
+        }
+
+        .exercise-items {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .exercise-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .exercise-circle {
+            width: 44px;
+            height: 44px;
+            border: 2px solid rgba(122, 158, 110, 0.5);
+            border-radius: 50%;
+            background: rgba(122, 158, 110, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.2s;
+        }
+
+        .exercise-item.done .exercise-circle {
+            background: var(--soft-green);
+            border-color: var(--moss);
+        }
+
+        .exercise-label {
+            font-size: 10px;
+            color: var(--text-mid);
+            font-weight: 600;
+        }
+
+        /* === FOOTER RIBBON === */
+        .footer-ribbon {
+            margin-top: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .ribbon-wrap {
+            display: inline-block;
+            background: linear-gradient(90deg, var(--gold) 0%, var(--warm-gold) 50%, var(--gold) 100%);
+            padding: 10px 48px;
+            border-radius: 5px;
+            clip-path: polygon(20px 0%, calc(100% - 20px) 0%, 100% 50%, calc(100% - 20px) 100%, 20px 100%, 0% 50%);
+            box-shadow: 0 4px 14px rgba(100, 70, 20, 0.25);
+        }
+
+        .footer-text {
+            font-family: 'Great Vibes', cursive;
+            font-size: 28px;
+            color: var(--text-dark);
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        /* === FLORAL CORNER DECO === */
+        .floral-tl,
+        .floral-tr,
+        .floral-bl,
+        .floral-br {
+            position: absolute;
+            font-size: 22px;
+            z-index: 3;
+            pointer-events: none;
+            line-height: 1;
+        }
+
+        .floral-tl {
+            top: 8px;
+            left: 8px;
+        }
+
+        .floral-tr {
+            top: 8px;
+            right: 8px;
+            transform: scaleX(-1);
+        }
+
+        .floral-bl {
+            bottom: 8px;
+            left: 8px;
+        }
+
+        .floral-br {
+            bottom: 8px;
+            right: 8px;
+            transform: scaleX(-1);
+        }
+
+        /* === DATE INPUT === */
+        .date-row {
+            display: flex;
+            justify-content: center;
+            margin-top: 8px;
+            margin-bottom: 4px;
+        }
+
+        .date-input {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(200, 168, 75, 0.4);
+            border-radius: 20px;
+            padding: 4px 16px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 13px;
+            color: var(--text-mid);
+            outline: none;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .date-input:focus {
+            border-color: var(--soft-green);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page">
+
+        <!-- Sparkles -->
+        <div class="sparkles" id="sparkles"></div>
+
+        <!-- Corner florals -->
+        <div class="floral-tl">🌸🌿</div>
+        <div class="floral-tr">🌸🌿</div>
+        <div class="floral-bl">🍄🌼</div>
+        <div class="floral-br">🍄🌼</div>
+
+        <div class="content">
+
+            <!-- HEADER -->
+            <div class="header">
+                <div class="wisteria-bar"></div>
+                <div class="title">Velvet Growth</div>
+                <div class="subtitle-ribbon">Nurture yourself and watch yourself bloom 🌿</div>
+                <div class="date-row">
+                    <input type="date" class="date-input" id="dateInput">
+                </div>
+            </div>
+
+            <!-- TOP GRID: Schedule | Affirmation | Priorities -->
+            <div class="top-grid">
+
+                <!-- Schedule -->
+                <div class="card">
+                    <div class="card-title"><span class="icon">📋</span> Today's Schedule</div>
+                    <div class="schedule-lines">
+                        <div class="schedule-line">
+                            <div class="dot dot-rose"></div><input class="line-input" type="text"
+                                placeholder="Morning...">
+                        </div>
+                        <div class="schedule-line">
+                            <div class="dot dot-lavender"></div><input class="line-input" type="text"
+                                placeholder="Mid-morning...">
+                        </div>
+                        <div class="schedule-line">
+                            <div class="dot dot-green"></div><input class="line-input" type="text"
+                                placeholder="Afternoon...">
+                        </div>
+                        <div class="schedule-line">
+                            <div class="dot dot-gold"></div><input class="line-input" type="text"
+                                placeholder="Evening...">
+                        </div>
+                        <div class="schedule-line">
+                            <div class="dot dot-blush"></div><input class="line-input" type="text"
+                                placeholder="Night...">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Affirmation -->
+                <div class="affirmation-card">
+                    <div class="affirmation-text" id="affirmation-text">
+                        "You are capable<br>of amazing things!"
+                    </div>
+                    <div class="roses-emoji">🌹🌹🌹</div>
+                    <button onclick="newAffirmation()"
+                        style="background:none;border:1px solid rgba(200,168,75,0.4);border-radius:20px;padding:3px 12px;font-size:10px;font-family:'Nunito',sans-serif;color:var(--text-mid);cursor:pointer;">✨
+                        New quote</button>
+                </div>
+
+                <!-- Priorities -->
+                <div class="card">
+                    <div class="card-title"><span class="icon">🏆</span> Priorities</div>
+                    <div class="priority-item">
+                        <div class="priority-num">1</div><input class="line-input" type="text"
+                            placeholder="Most important...">
+                    </div>
+                    <div class="priority-item">
+                        <div class="priority-num">2</div><input class="line-input" type="text"
+                            placeholder="Second priority...">
+                    </div>
+                    <div class="priority-item">
+                        <div class="priority-num">3</div><input class="line-input" type="text"
+                            placeholder="Third priority...">
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- MIDDLE ROW: To-Do | Hydrate | Self-Care -->
+            <div class="mid-grid">
+
+                <!-- To-Do -->
+                <div class="card">
+                    <div class="card-title"><span class="icon">✅</span> To Do List</div>
+                    <div id="todo-list">
+                        <div class="todo-item">
+                            <div class="checkbox" onclick="toggleCheck(this)"></div><input class="line-input"
+                                type="text" placeholder="Task one...">
+                        </div>
+                        <div class="todo-item">
+                            <div class="checkbox" onclick="toggleCheck(this)"></div><input class="line-input"
+                                type="text" placeholder="Task two...">
+                        </div>
+                        <div class="todo-item">
+                            <div class="checkbox" onclick="toggleCheck(this)"></div><input class="line-input"
+                                type="text" placeholder="Task three...">
+                        </div>
+                        <div class="todo-item">
+                            <div class="checkbox" onclick="toggleCheck(this)"></div><input class="line-input"
+                                type="text" placeholder="Task four...">
+                        </div>
+                    </div>
+                    <div class="todo-motto">🌱 Grow through what you go through!</div>
+                </div>
+
+                <!-- Hydrate -->
+                <div class="card hydrate-card">
+                    <div class="hydrate-title">💧 Hydrate</div>
+                    <div class="hydrate-sub">Drink your water &amp;<br>let yourself flourish! 🦋</div>
+                    <div class="water-drops" id="water-drops">
+                        <span class="drop" onclick="toggleDrop(this)">💧</span>
+                        <span class="drop" onclick="toggleDrop(this)">💧</span>
+                        <span class="drop" onclick="toggleDrop(this)">💧</span>
+                        <span class="drop" onclick="toggleDrop(this)">💧</span>
+                        <span class="drop" onclick="toggleDrop(this)">💧</span>
+                        <span class="drop" onclick="toggleDrop(this)">💧</span>
+                        <span class="drop" onclick="toggleDrop(this)">💧</span>
+                        <span class="drop" onclick="toggleDrop(this)">💧</span>
+                    </div>
+                    <div style="margin-top:8px;font-size:11px;color:#6080a0;" id="water-count">0 / 8 glasses</div>
+                </div>
+
+                <!-- Self-Care -->
+                <div class="card selfcare-card">
+                    <div class="card-title"><span class="icon">💖</span> Today's Self-Care</div>
+                    <div class="selfcare-subtitle">Bloom with self-love.</div>
+                    <div class="selfcare-grid">
+                        <div class="selfcare-item" onclick="toggleSelfCare(this)">
+                            <div class="selfcare-icon rest-icon">🌙</div>
+                            <div class="selfcare-label">Rest</div>
+                        </div>
+                        <div class="selfcare-item" onclick="toggleSelfCare(this)">
+                            <div class="selfcare-icon read-icon">📖</div>
+                            <div class="selfcare-label">Read</div>
+                        </div>
+                        <div class="selfcare-item" onclick="toggleSelfCare(this)">
+                            <div class="selfcare-icon reflect-icon">🌿</div>
+                            <div class="selfcare-label">Reflect</div>
+                        </div>
+                        <div class="selfcare-item" onclick="toggleSelfCare(this)">
+                            <div class="selfcare-icon" style="background:#c06080;">❤️</div>
+                            <div class="selfcare-label">Gratitude</div>
+                        </div>
+                        <div class="selfcare-item" onclick="toggleSelfCare(this)">
+                            <div class="selfcare-icon" style="background:#a07898;">🧘</div>
+                            <div class="selfcare-label">Meditate</div>
+                        </div>
+                        <div class="selfcare-item" onclick="toggleSelfCare(this)">
+                            <div class="selfcare-icon" style="background:#808850;">🛁</div>
+                            <div class="selfcare-label">Pamper</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- BOTTOM ROW: Mood | Exercise -->
+            <div class="bot-grid">
+
+                <!-- Mood -->
+                <div class="card">
+                    <div class="card-title"><span class="icon">🌸</span> Mood</div>
+                    <div class="mood-subtitle">Choose your vibe!</div>
+                    <div class="mood-pots">
+                        <div class="mood-item" onclick="selectMood(this)">
+                            <div class="mood-emoji">🌻</div>
+                            <div class="mood-label">Happy</div>
+                        </div>
+                        <div class="mood-item" onclick="selectMood(this)">
+                            <div class="mood-emoji">🌿</div>
+                            <div class="mood-label">Okay</div>
+                        </div>
+                        <div class="mood-item" onclick="selectMood(this)">
+                            <div class="mood-emoji">🍂</div>
+                            <div class="mood-label">Meh</div>
+                        </div>
+                        <div class="mood-item" onclick="selectMood(this)">
+                            <div class="mood-emoji">🌧️</div>
+                            <div class="mood-label">Stressed</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exercise -->
+                <div class="card exercise-card">
+                    <div class="card-title"><span class="icon">🌱</span> Exercise</div>
+                    <div class="exercise-sub">Get moving &amp; grow strong!</div>
+                    <div class="exercise-items">
+                        <div class="exercise-item" onclick="toggleExercise(this)">
+                            <div class="exercise-circle">👟</div>
+                            <div class="exercise-label">Steps</div>
+                        </div>
+                        <div class="exercise-item" onclick="toggleExercise(this)">
+                            <div class="exercise-circle">💪</div>
+                            <div class="exercise-label">Workout</div>
+                        </div>
+                        <div class="exercise-item" onclick="toggleExercise(this)">
+                            <div class="exercise-circle">🧘</div>
+                            <div class="exercise-label">Stretch</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- FOOTER -->
+            <div class="footer-ribbon">
+                <div class="ribbon-wrap">
+                    <div class="footer-text">Every day is a new beginning 🌿</div>
+                </div>
+            </div>
+
+        </div><!-- /content -->
+    </div><!-- /page -->
+
+    <script>
+        // === SPARKLES ===
+        const sparklesEl = document.getElementById('sparkles');
+        const sparkPositions = [
+            [12, 8], [88, 5], [5, 25], [95, 30], [8, 55], [92, 60], [15, 80], [85, 75], [30, 12], [70, 10],
+            [20, 45], [80, 40], [40, 85], [60, 88], [50, 20], [25, 70], [75, 65], [10, 95], [90, 90], [50, 50]
+        ];
+        sparkPositions.forEach(([x, y], i) => {
+            const s = document.createElement('div');
+            s.className = 'sparkle';
+            s.style.left = x + '%';
+            s.style.top = y + '%';
+            s.style.animationDelay = (i * 0.18) + 's';
+            s.style.animationDuration = (2 + Math.random() * 1.5) + 's';
+            sparklesEl.appendChild(s);
+        });
+
+        // === DATE ===
+        const dateInput = document.getElementById('dateInput');
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.value = today;
+
+        // === AFFIRMATIONS ===
+        const affirmations = [
+            '"You are capable<br>of amazing things!"',
+            '"Your growth is<br>beautiful to witness."',
+            '"Every step forward<br>is a victory."',
+            '"You deserve all<br>the love you give."',
+            '"Rest is also<br>a form of progress."',
+            '"You are exactly<br>where you need to be."',
+            '"Bloom at your<br>own pace, dear soul."',
+            '"Your potential is<br>limitless and bright."',
+        ];
+        let affIdx = 0;
+        function newAffirmation() {
+            affIdx = (affIdx + 1) % affirmations.length;
+            const el = document.getElementById('affirmation-text');
+            el.style.opacity = 0;
+            setTimeout(() => {
+                el.innerHTML = affirmations[affIdx];
+                el.style.transition = 'opacity 0.4s';
+                el.style.opacity = 1;
+            }, 200);
+        }
+
+        // === CHECKBOX ===
+        function toggleCheck(el) {
+            el.classList.toggle('checked');
+        }
+
+        // === WATER ===
+        function toggleDrop(el) {
+            el.classList.toggle('filled');
+            updateWaterCount();
+        }
+        function updateWaterCount() {
+            const filled = document.querySelectorAll('#water-drops .drop.filled').length;
+            document.getElementById('water-count').textContent = filled + ' / 8 glasses';
+        }
+
+        // === SELF CARE ===
+        function toggleSelfCare(item) {
+            const icon = item.querySelector('.selfcare-icon');
+            icon.classList.toggle('active');
+        }
+
+        // === MOOD ===
+        function selectMood(item) {
+            document.querySelectorAll('.mood-item').forEach(m => m.classList.remove('selected'));
+            item.classList.add('selected');
+        }
+
+        // === EXERCISE ===
+        function toggleExercise(item) {
+            item.classList.toggle('done');
+        }
+    </script>
+</body>
+
+</html>
