@@ -315,8 +315,8 @@ line-height: 70px;
 /* تصميم الفقاعة الزجاجية */
 .column {
     position: relative;
-    width: 250px;
-    height: 250px;
+    width: 70%;
+    height: 70%;
     border-radius: 55%;
     overflow: hidden;
     cursor: pointer;
